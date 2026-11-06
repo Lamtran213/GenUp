@@ -10,6 +10,7 @@ import {
   Clock,
   Compass,
   Flame,
+  Gem,
   LayoutDashboard,
   Lock,
   Mail,
@@ -18,7 +19,7 @@ import {
   ShieldCheck,
   Sparkles,
   TrendingUp,
-  UserCheck,
+  Zap,
 } from "lucide-react";
 import { useGenUp } from "@/context/GenUpContext";
 import { Avatar2D } from "@/components/avatar/Avatar2D";
@@ -72,7 +73,6 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     return () => window.removeEventListener("genup-auth-change", checkAuth);
   }, [isPublicPage, pathname, router]);
 
-  // Không bọc sidebar cho trang Landing (/) hoặc trang Login/Onboarding
   const isStandalonePage =
     pathname === "/" ||
     pathname === "/login" ||
@@ -83,7 +83,9 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     return (
       <div className="min-h-screen bg-background text-foreground flex items-center justify-center p-4">
         <div className="text-center space-y-2">
-          <p className="text-sm font-medium">Đang kiểm tra phiên đăng nhập...</p>
+          <p className="text-sm font-semibold text-emerald-800">
+            Đang kiểm tra phiên đăng nhập...
+          </p>
           <p className="text-xs text-muted">
             Vui lòng đăng nhập bằng Google để truy cập GenUp.
           </p>
@@ -100,91 +102,97 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const unreadNotifications = notifications.filter((n) => !n.isRead).length;
   const unreadInbox = parentInbox.filter((m) => !m.isRead).length;
 
+  // Tính Level & phần trăm XP theo phong cách Edu Gamification (Mỗi 100 XP lên 1 Level)
+  const currentLevel = Math.floor(profile.totalXp / 100) + 1;
+  const xpInCurrentLevel = profile.totalXp % 100;
+
   const studentNav = [
-    { href: "/dashboard", label: "Tổng quan", icon: LayoutDashboard },
-    { href: "/lessons", label: "Thư viện bài học", icon: BookOpen },
-    { href: "/scenarios", label: "Tình huống", icon: Compass },
-    { href: "/progress", label: "Tiến độ & Streak", icon: TrendingUp },
-    { href: "/rewards", label: "Nhiệm vụ & Shop", icon: Award },
-    { href: "/avatar", label: "Avatar Studio", icon: Sparkles },
-    { href: "/chat", label: "Hỏi Gendio", icon: MessageCircle },
+    { href: "/dashboard", label: "Bản đồ Học tập", icon: LayoutDashboard, color: "text-emerald-600" },
+    { href: "/lessons", label: "Thư viện Bài học", icon: BookOpen, color: "text-teal-600" },
+    { href: "/scenarios", label: "Đấu trường Tình huống", icon: Compass, color: "text-amber-600" },
+    { href: "/progress", label: "Hành trình & Streak", icon: TrendingUp, color: "text-orange-600" },
+    { href: "/rewards", label: "Nhiệm vụ & Cửa hàng", icon: Award, color: "text-rose-600" },
+    { href: "/avatar", label: "Phòng thay đồ 2D", icon: Sparkles, color: "text-violet-600" },
+    { href: "/chat", label: "Hỏi Trợ lý Gendio", icon: MessageCircle, color: "text-sky-600" },
     {
       href: "/notifications",
-      label: "Thông báo",
+      label: "Thông báo & FCM",
       icon: Bell,
+      color: "text-indigo-600",
       badge: unreadNotifications > 0 ? unreadNotifications : undefined,
     },
-    { href: "/settings", label: "Cài đặt hồ sơ", icon: Settings },
+    { href: "/settings", label: "Hồ sơ cá nhân", icon: Settings, color: "text-slate-600" },
   ];
 
   const parentNav = [
-    { href: "/parent", label: "Parent Dashboard", icon: ShieldCheck },
+    { href: "/parent", label: "Parent Dashboard", icon: ShieldCheck, color: "text-emerald-600" },
     {
       href: "/parent/inbox",
       label: "Hộp thư báo cáo",
       icon: Mail,
+      color: "text-amber-600",
       badge: unreadInbox > 0 ? unreadInbox : undefined,
     },
-    { href: "/parent/email-settings", label: "Cấu hình Email", icon: Settings },
-    { href: "/parent/gendio", label: "Gendio Phụ huynh", icon: MessageCircle },
-    { href: "/parent/support", label: "Hỗ trợ & FAQ", icon: BookOpen },
-    { href: "/premium", label: "Gói Premium", icon: Sparkles },
+    { href: "/parent/email-settings", label: "Cấu hình Email", icon: Settings, color: "text-teal-600" },
+    { href: "/parent/gendio", label: "Gendio Phụ huynh", icon: MessageCircle, color: "text-sky-600" },
+    { href: "/parent/support", label: "Hỗ trợ & FAQ", icon: BookOpen, color: "text-indigo-600" },
+    { href: "/premium", label: "Gói Premium", icon: Sparkles, color: "text-violet-600" },
   ];
 
   const activeNav = isParentZone ? parentNav : studentNav;
 
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col lg:flex-row">
-      {/* Sidebar trên Desktop */}
+      {/* Sidebar Edu Gamification trên Desktop */}
       <aside className="hidden lg:flex lg:w-64 lg:flex-col lg:fixed lg:inset-y-0 bg-surface border-r border-border-strong z-20">
         <div className="h-16 px-5 flex items-center justify-between border-b border-border-strong">
           <Link href="/" className="flex items-center gap-2.5">
-            <span className="w-8 h-8 rounded-lg bg-primary text-primary-foreground flex items-center justify-center font-semibold text-sm">
+            <span className="w-9 h-9 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white flex items-center justify-center font-bold text-sm shadow-sm">
               G
             </span>
             <div>
-              <span className="font-semibold text-base tracking-tight block leading-none">
-                GenUp
-              </span>
+              <div className="flex items-center gap-1.5">
+                <span className="font-bold text-base tracking-tight block leading-none text-slate-900">
+                  GenUp
+                </span>
+                <span className="px-1.5 py-0.5 rounded-md bg-emerald-100 text-emerald-800 text-[10px] font-bold">
+                  EDU
+                </span>
+              </div>
               <span className="text-xs text-muted">
-                {isParentZone ? "Góc Phụ Huynh" : `Học sinh · Lớp ${profile.grade}`}
+                {isParentZone ? "Góc Phụ Huynh" : `Nhà thám hiểm · Lớp ${profile.grade}`}
               </span>
             </div>
           </Link>
         </div>
 
-        {/* Chuyển nhanh khu vực Học sinh <-> Phụ huynh theo Mục 4.2 SRS */}
+        {/* Chuyển nhanh khu vực Học sinh <-> Phụ huynh */}
         <div className="p-3 border-b border-border">
-          <div
-            className="grid grid-cols-2 p-1 rounded-xl bg-background"
-            style={{ boxShadow: "var(--shadow-segment-track)" }}
-          >
+          <div className="grid grid-cols-2 p-1 rounded-xl bg-emerald-50/80 border border-emerald-200/70">
             <Link
               href="/dashboard"
-              className={`h-8 rounded-lg text-xs font-medium flex items-center justify-center transition-colors ${
+              className={`h-8 rounded-lg text-xs font-semibold flex items-center justify-center transition-colors ${
                 !isParentZone
-                  ? "bg-surface text-foreground"
-                  : "text-muted hover:text-foreground"
+                  ? "bg-emerald-600 text-white shadow-sm"
+                  : "text-emerald-900/70 hover:text-emerald-950"
               }`}
-              style={!isParentZone ? { boxShadow: "var(--shadow-segment-thumb)" } : undefined}
             >
               Khu Học tập
             </Link>
             <Link
               href="/parent"
-              className={`h-8 rounded-lg text-xs font-medium flex items-center justify-center transition-colors ${
+              className={`h-8 rounded-lg text-xs font-semibold flex items-center justify-center transition-colors ${
                 isParentZone
-                  ? "bg-surface text-foreground"
-                  : "text-muted hover:text-foreground"
+                  ? "bg-emerald-600 text-white shadow-sm"
+                  : "text-emerald-900/70 hover:text-emerald-950"
               }`}
-              style={isParentZone ? { boxShadow: "var(--shadow-segment-thumb)" } : undefined}
             >
               Góc Phụ huynh
             </Link>
           </div>
         </div>
 
-        {/* Danh sách điều hướng */}
+        {/* Danh sách điều hướng có icon sắc màu */}
         <nav className="flex-1 px-3 py-3 space-y-1 overflow-y-auto">
           {activeNav.map((item) => {
             const Icon = item.icon;
@@ -197,18 +205,22 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               <Link
                 key={item.href}
                 href={item.href}
-                className={`h-10 px-3 rounded-xl flex items-center justify-between text-sm transition-colors ${
+                className={`h-10 px-3 rounded-xl flex items-center justify-between text-sm transition-all ${
                   isActive
-                    ? "bg-secondary text-foreground font-medium"
-                    : "text-muted hover:bg-item-hover hover:text-foreground"
+                    ? "bg-emerald-100/90 text-emerald-950 font-semibold border border-emerald-300/80 shadow-2xs"
+                    : "text-slate-600 hover:bg-emerald-50/60 hover:text-slate-900"
                 }`}
               >
                 <span className="flex items-center gap-2.5 truncate">
-                  <Icon className="w-4 h-4 shrink-0" />
+                  <Icon
+                    className={`w-4 h-4 shrink-0 ${
+                      isActive ? "text-emerald-700" : item.color
+                    }`}
+                  />
                   <span className="truncate">{item.label}</span>
                 </span>
                 {item.badge !== undefined && (
-                  <span className="px-2 py-0.5 text-xs font-medium rounded-full bg-background text-foreground tabular-nums">
+                  <span className="px-2 py-0.5 text-xs font-bold rounded-full bg-rose-500 text-white tabular-nums">
                     {item.badge}
                   </span>
                 )}
@@ -217,45 +229,73 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           })}
         </nav>
 
-        {/* Thẻ tóm tắt Hồ sơ & Bộ đếm 15 phút Free ở chân Sidebar */}
-        <div className="p-3 border-t border-border-strong space-y-2.5">
-          <div className="p-2.5 rounded-xl bg-background flex items-center justify-between">
+        {/* Thẻ Player HUD & Bộ đếm 15 phút Free ở chân Sidebar */}
+        <div className="p-3 border-t border-border-strong space-y-2.5 bg-emerald-50/40">
+          <div className="p-2.5 rounded-xl bg-white border border-emerald-200/80 flex items-center justify-between">
             <div className="flex items-center gap-2 min-w-0">
-              <Clock className="w-4 h-4 text-muted shrink-0" />
+              <div className="w-7 h-7 rounded-lg bg-teal-100 text-teal-700 flex items-center justify-center shrink-0">
+                <Clock className="w-3.5 h-3.5" />
+              </div>
               <div className="min-w-0">
-                <p className="text-xs text-muted truncate">
+                <p className="text-[11px] text-slate-500 truncate">
                   {parentSettings.planType === "Free"
-                    ? "Thời lượng Free hôm nay"
+                    ? "Năng lượng học Free"
                     : "Gói Premium Đang bật"}
                 </p>
-                <p className="text-xs font-semibold tabular-nums">
+                <p className="text-xs font-bold text-slate-900 tabular-nums">
                   {parentSettings.planType === "Free"
                     ? `${formatSeconds(remainingFreeSeconds)} / 15:00`
-                    : "Không giới hạn"}
+                    : "Không giới hạn ∞"}
                 </p>
               </div>
             </div>
             <Link
               href="/premium"
-              className="text-xs font-medium px-2.5 py-1 rounded-lg bg-surface border border-border-strong hover:bg-button-hover shrink-0"
+              className="text-xs font-semibold px-2.5 py-1 rounded-lg bg-amber-100 text-amber-900 hover:bg-amber-200 border border-amber-300 shrink-0"
             >
-              {parentSettings.planType === "Free" ? "Nâng cấp" : "Quản lý"}
+              {parentSettings.planType === "Free" ? "Nâng cấp" : "VIP"}
             </Link>
           </div>
 
-          <div className="flex items-center gap-2.5 px-1">
-            <Avatar2D
-              gender={profile.avatarGender}
-              hairId={profile.equippedHairId}
-              outfitId={profile.equippedOutfitId}
-              accessoryId={profile.equippedAccessoryId}
-              size={36}
-            />
-            <div className="min-w-0 flex-1">
-              <p className="text-sm font-medium truncate">{profile.nickname}</p>
-              <p className="text-xs text-muted tabular-nums">
-                {profile.totalXp} XP · {profile.currentStreak} ngày Streak
-              </p>
+          {/* Thẻ Nhân vật & Thanh kinh nghiệm Level */}
+          <div className="p-2.5 rounded-xl bg-white border border-emerald-200/80 space-y-2">
+            <div className="flex items-center gap-2.5">
+              <div className="p-1 rounded-xl bg-emerald-50 border border-emerald-200 shrink-0">
+                <Avatar2D
+                  gender={profile.avatarGender}
+                  hairId={profile.equippedHairId}
+                  outfitId={profile.equippedOutfitId}
+                  accessoryId={profile.equippedAccessoryId}
+                  size={38}
+                />
+              </div>
+              <div className="min-w-0 flex-1">
+                <div className="flex items-center justify-between gap-1">
+                  <p className="text-xs font-bold text-slate-900 truncate">
+                    {profile.nickname}
+                  </p>
+                  <span className="px-1.5 py-0.5 rounded-md bg-emerald-600 text-white text-[10px] font-bold shrink-0">
+                    Lv.{currentLevel}
+                  </span>
+                </div>
+                <p className="text-[11px] text-slate-500 tabular-nums">
+                  {profile.totalXp} XP · {profile.rewardPoints} Điểm
+                </p>
+              </div>
+            </div>
+
+            {/* Thanh tiến trình XP lên cấp */}
+            <div className="space-y-1">
+              <div className="flex items-center justify-between text-[10px] font-semibold text-emerald-800">
+                <span>Tiến độ lên Lv.{currentLevel + 1}</span>
+                <span className="tabular-nums">{xpInCurrentLevel}/100 XP</span>
+              </div>
+              <div className="w-full h-2 rounded-full bg-emerald-100 overflow-hidden">
+                <div
+                  className="h-full bg-gradient-to-r from-emerald-500 to-teal-500 rounded-full transition-all duration-300"
+                  style={{ width: `${Math.max(8, xpInCurrentLevel)}%` }}
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -263,55 +303,83 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
       {/* Khung chính */}
       <div className="flex-1 lg:pl-64 flex flex-col min-w-0 pb-16 lg:pb-0">
-        {/* Header dính đầu trang */}
-        <header className="h-14 px-4 lg:px-8 bg-surface border-b border-border-strong sticky top-0 z-10 flex items-center justify-between gap-3">
+        {/* Header Gamification HUD dính đầu trang */}
+        <header className="h-14 px-4 lg:px-8 bg-white/95 backdrop-blur-md border-b border-border-strong sticky top-0 z-10 flex items-center justify-between gap-3">
           <div className="flex items-center gap-2.5 min-w-0">
             <Link href="/" className="lg:hidden flex items-center gap-2">
-              <span className="w-7 h-7 rounded-lg bg-primary text-primary-foreground flex items-center justify-center font-semibold text-xs">
+              <span className="w-7 h-7 rounded-lg bg-emerald-600 text-white flex items-center justify-center font-bold text-xs">
                 G
               </span>
-              <span className="font-semibold text-sm">GenUp</span>
+              <span className="font-bold text-sm">GenUp</span>
             </Link>
-            <span className="hidden lg:inline-flex items-center gap-1.5 text-xs text-muted">
-              <UserCheck className="w-3.5 h-3.5" />
+            <span className="hidden lg:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-xs font-medium text-emerald-900">
+              <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
               {isParentZone
-                ? "Chế độ đồng hành gia đình (Tuân thủ bảo mật riêng tư NFR-S06)"
-                : "Không gian học tập an toàn dành cho học sinh THCS (11–15 tuổi)"}
+                ? "Chế độ đồng hành gia đình (Bảo mật riêng tư NFR-S06)"
+                : `Cấp độ ${currentLevel} · Khám phá kiến thức & kỹ năng THCS`}
             </span>
           </div>
 
+          {/* Cụm huy hiệu HUD (Timer, XP, Điểm, Streak) */}
           <div className="flex items-center gap-2">
+            {/* Huy hiệu XP */}
+            <Link
+              href="/progress"
+              className="hidden sm:inline-flex h-8 px-2.5 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-800 items-center gap-1 text-xs font-bold tabular-nums"
+              title="Tổng điểm kinh nghiệm (XP)"
+            >
+              <Zap className="w-3.5 h-3.5 text-emerald-600 fill-emerald-500" />
+              <span>{profile.totalXp} XP</span>
+            </Link>
+
+            {/* Huy hiệu Điểm đổi đồ */}
+            <Link
+              href="/rewards"
+              className="hidden md:inline-flex h-8 px-2.5 rounded-lg bg-sky-50 border border-sky-200 text-sky-800 items-center gap-1 text-xs font-bold tabular-nums"
+              title="Ví điểm đổi trang phục Avatar 2D"
+            >
+              <Gem className="w-3.5 h-3.5 text-sky-600" />
+              <span>{profile.rewardPoints}</span>
+            </Link>
+
+            {/* Huy hiệu Chuỗi ngày học Streak */}
+            <Link
+              href="/progress"
+              className="h-8 px-2.5 rounded-lg bg-amber-50 border border-amber-200 text-amber-900 flex items-center gap-1 text-xs font-bold tabular-nums"
+              title="Chuỗi ngày học liên tiếp (Learning Streak)"
+            >
+              <Flame className="w-3.5 h-3.5 text-amber-600 fill-amber-500" />
+              <span>{profile.currentStreak} ngày</span>
+            </Link>
+
             {/* Chỉ báo Smart Timer 15 phút Free */}
             <div
-              className="h-8 px-2.5 rounded-lg bg-background flex items-center gap-1.5 text-xs tabular-nums"
+              className="h-8 px-2.5 rounded-lg bg-teal-50 border border-teal-200 text-teal-900 flex items-center gap-1.5 text-xs tabular-nums"
               title="Bộ đếm tự động tạm dừng khi ẩn tab hoặc không tương tác quá 60 giây (US-31)"
             >
-              <Clock className="w-3.5 h-3.5 text-muted" />
-              <span className="font-medium">
+              <Clock className="w-3.5 h-3.5 text-teal-700" />
+              <span className="font-bold">
                 {parentSettings.planType === "Free"
                   ? formatSeconds(remainingFreeSeconds)
-                  : "Premium"}
+                  : "VIP"}
               </span>
               {parentSettings.planType === "Free" && (
-                <span className="text-muted hidden sm:inline">
-                  {isTimerRunning ? "(Đang tính giờ)" : "(Tạm dừng)"}
+                <span className="text-teal-700 text-[11px] hidden xl:inline">
+                  {isTimerRunning ? "(Đang học)" : "(Tạm dừng)"}
                 </span>
               )}
-            </div>
-
-            <div className="h-8 px-2.5 rounded-lg bg-background flex items-center gap-1 text-xs font-medium tabular-nums">
-              <Flame className="w-3.5 h-3.5 text-amber-700" />
-              <span>{profile.currentStreak} ngày</span>
             </div>
 
             <GoogleSignInButton compact />
 
             <Link
               href={isParentZone ? "/dashboard" : "/parent"}
-              className="h-8 px-3 rounded-lg border border-border-strong bg-surface hover:bg-button-hover text-xs font-medium flex items-center gap-1.5"
+              className="h-8 px-3 rounded-lg border border-border-strong bg-surface hover:bg-button-hover text-xs font-semibold flex items-center gap-1.5"
             >
-              <Lock className="w-3 h-3 text-muted" />
-              <span>{isParentZone ? "Về Khu Học sinh" : "Góc Phụ huynh"}</span>
+              <Lock className="w-3 h-3 text-emerald-700" />
+              <span className="hidden sm:inline">
+                {isParentZone ? "Về Khu Học sinh" : "Góc Phụ huynh"}
+              </span>
             </Link>
           </div>
         </header>
@@ -322,8 +390,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         </main>
       </div>
 
-      {/* Thanh điều hướng dưới cùng trên Mobile (NFR-C02, NFR-C05: nút >= 44x44px) */}
-      <nav className="lg:hidden fixed bottom-0 inset-x-0 bg-surface border-t border-border-strong z-20 grid grid-cols-5 h-16 px-1">
+      {/* Thanh điều hướng dưới cùng trên Mobile */}
+      <nav className="lg:hidden fixed bottom-0 inset-x-0 bg-white border-t border-border-strong z-20 grid grid-cols-5 h-16 px-1">
         {(isParentZone
           ? [
               { href: "/parent", label: "Tổng quan", icon: ShieldCheck },
@@ -333,10 +401,10 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               { href: "/premium", label: "Premium", icon: Sparkles },
             ]
           : [
-              { href: "/dashboard", label: "Tổng quan", icon: LayoutDashboard },
+              { href: "/dashboard", label: "Bản đồ", icon: LayoutDashboard },
               { href: "/lessons", label: "Bài học", icon: BookOpen },
               { href: "/scenarios", label: "Tình huống", icon: Compass },
-              { href: "/rewards", label: "Thưởng", icon: Award },
+              { href: "/rewards", label: "Nhiệm vụ", icon: Award },
               { href: "/chat", label: "Gendio", icon: MessageCircle },
             ]
         ).map((item) => {
@@ -347,7 +415,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               key={item.href}
               href={item.href}
               className={`min-h-[44px] flex flex-col items-center justify-center gap-1 text-xs ${
-                isActive ? "text-foreground font-semibold" : "text-muted"
+                isActive ? "text-emerald-700 font-bold" : "text-slate-500"
               }`}
             >
               <Icon className="w-4 h-4" />
@@ -359,4 +427,3 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     </div>
   );
 }
-

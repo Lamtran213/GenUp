@@ -2,9 +2,56 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { ArrowRight, CheckCircle2, Clock, Compass } from "lucide-react";
+import {
+  ArrowRight,
+  Award,
+  CheckCircle2,
+  Clock,
+  Compass,
+  Gem,
+  ShieldAlert,
+  ShieldCheck,
+  Sparkles,
+  Trophy,
+  Zap,
+} from "lucide-react";
 import { useGenUp } from "@/context/GenUpContext";
 import { TOPIC_LABELS } from "@/lib/seed-data";
+
+const TOPIC_THEME: Record<
+  string,
+  {
+    badge: string;
+    activeCard: string;
+    banner: string;
+    accentText: string;
+  }
+> = {
+  Puberty: {
+    badge: "bg-emerald-100 text-emerald-800 border-emerald-200",
+    activeCard: "border-emerald-500 bg-emerald-50/70 ring-2 ring-emerald-500/20",
+    banner: "from-emerald-600 to-teal-600",
+    accentText: "text-emerald-700",
+  },
+  Boundaries: {
+    badge: "bg-rose-100 text-rose-800 border-rose-200",
+    activeCard: "border-rose-500 bg-rose-50/70 ring-2 ring-rose-500/20",
+    banner: "from-rose-600 to-orange-500",
+    accentText: "text-rose-700",
+  },
+  CyberSafety: {
+    badge: "bg-sky-100 text-sky-800 border-sky-200",
+    activeCard: "border-sky-500 bg-sky-50/70 ring-2 ring-sky-500/20",
+    banner: "from-sky-600 to-indigo-600",
+    accentText: "text-sky-700",
+  },
+  Emotion: {
+    badge: "bg-amber-100 text-amber-900 border-amber-200",
+    activeCard: "border-amber-500 bg-amber-50/70 ring-2 ring-amber-500/20",
+    banner: "from-amber-500 to-orange-600",
+    accentText: "text-amber-800",
+  },
+};
 
 export default function ScenariosLibraryPage() {
   const {
@@ -27,168 +74,307 @@ export default function ScenariosLibraryPage() {
     (o) => o.id === currentAttempt?.selectedOptionId
   );
 
+  const completedCount = Object.keys(scenarioAttempts).length;
+
   if (isFreeLimitReached) {
     return (
-      <div className="bg-surface border border-border rounded-xl p-8 text-center space-y-3 max-w-lg mx-auto">
-        <Clock className="w-8 h-8 text-amber-700 mx-auto" />
-        <h1 className="text-base font-semibold">
-          Đã hết 15 phút thực hành miễn phí trong ngày
+      <div className="bg-white border-2 border-amber-200 rounded-2xl p-8 text-center space-y-3 max-w-lg mx-auto shadow-sm">
+        <div className="w-12 h-12 rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center mx-auto">
+          <Clock className="w-6 h-6" />
+        </div>
+        <h1 className="text-base font-bold text-slate-900">
+          Đã hết 15 phút năng lượng thực hành miễn phí hôm nay
         </h1>
-        <p className="text-xs text-muted">
-          Toàn bộ kết quả tình huống đã lưu của bạn vẫn được giữ nguyên. Hãy quay lại vào ngày mai hoặc nâng cấp gói Premium.
+        <p className="text-xs text-slate-600 leading-relaxed">
+          Toàn bộ huy hiệu và kết quả tình huống đã lưu của bạn vẫn được bảo toàn. Hãy quay lại vào ngày mai hoặc nâng cấp gói Premium để mở khóa không giới hạn!
         </p>
         <Link
           href="/premium"
-          className="h-9 px-4 rounded-xl bg-primary text-primary-foreground text-xs font-medium inline-flex items-center"
+          className="h-10 px-5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold inline-flex items-center gap-1.5 shadow-sm"
         >
-          Xem quyền lợi Premium
+          <Sparkles className="w-4 h-4" />
+          <span>Mở khóa Năng lượng Không giới hạn</span>
         </Link>
       </div>
     );
   }
 
+  const activeTheme =
+    TOPIC_THEME[activeScenario?.topicCategory || "Puberty"] || TOPIC_THEME.Puberty;
+
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-xl font-semibold tracking-tight">
-          Thư viện Tình huống Thực hành (US-12, US-13)
-        </h1>
-        <p className="text-xs text-muted">
-          Luyện tập ra quyết định an toàn độc lập, nhận phản hồi không phán xét và lời giải thích chi tiết (+30 XP lần đầu).
-        </p>
+      {/* Banner Đầu trang kiểu Đấu trường Thử thách (Edu Gamification) */}
+      <div className="rounded-2xl bg-gradient-to-r from-emerald-600 via-teal-600 to-sky-600 text-white p-5 sm:p-6 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="space-y-1.5">
+          <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-white/20 text-white text-xs font-semibold">
+            <Trophy className="w-3.5 h-3.5 text-amber-300" />
+            <span>Đấu trường Tình huống Thực tế (US-12, US-13)</span>
+          </div>
+          <h1 className="text-xl sm:text-2xl font-bold tracking-tight">
+            Thử thách Ra Quyết Định An Toàn
+          </h1>
+          <p className="text-xs sm:text-sm text-white/90 max-w-2xl">
+            Chọn cách ứng xử thông minh nhất trước các tình huống tuổi học trò để nhận thưởng{" "}
+            <strong className="text-amber-200">+30 XP & +20 Điểm đổi đồ</strong> ngay lần đầu chinh phục!
+          </p>
+        </div>
+
+        {/* Tiến độ chinh phục */}
+        <div className="bg-white/15 backdrop-blur-sm border border-white/25 rounded-2xl p-3.5 min-w-[180px] space-y-1.5">
+          <div className="flex items-center justify-between text-xs font-semibold">
+            <span>Đã chinh phục</span>
+            <span className="tabular-nums text-amber-200">
+              {completedCount} / {scenarios.length} thử thách
+            </span>
+          </div>
+          <div className="w-full h-2.5 rounded-full bg-black/25 overflow-hidden">
+            <div
+              className="h-full bg-amber-400 rounded-full transition-all duration-300"
+              style={{
+                width: `${Math.max(
+                  10,
+                  Math.round((completedCount / Math.max(1, scenarios.length)) * 100)
+                )}%`,
+              }}
+            />
+          </div>
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
-        {/* Danh sách chọn tình huống bên trái */}
-        <div className="space-y-2.5">
-          {scenarios.map((scen) => {
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+        {/* Cột trái: Danh sách Nhiệm vụ Tình huống (4 cột) */}
+        <div className="lg:col-span-5 space-y-3">
+          <div className="flex items-center justify-between px-1">
+            <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
+              Danh sách Thử thách ({scenarios.length})
+            </span>
+            <span className="text-xs text-emerald-700 font-semibold">
+              Chọn 1 thẻ để giải
+            </span>
+          </div>
+
+          {scenarios.map((scen, idx) => {
             const attempt = scenarioAttempts[scen.id];
             const isSelected = scen.id === activeScenario?.id;
+            const theme = TOPIC_THEME[scen.topicCategory] || TOPIC_THEME.Puberty;
+
             return (
               <button
                 key={scen.id}
                 type="button"
                 onClick={() => setActiveScenarioId(scen.id)}
-                className={`w-full p-4 rounded-xl border text-left transition-colors space-y-1.5 ${
+                className={`w-full p-4 rounded-2xl border-2 text-left transition-all space-y-2.5 ${
                   isSelected
-                    ? "bg-surface border-primary"
-                    : "bg-surface border-border hover:bg-surface-hover"
+                    ? theme.activeCard
+                    : "bg-white border-slate-200/90 hover:border-emerald-300 hover:bg-emerald-50/20"
                 }`}
               >
                 <div className="flex items-center justify-between gap-2">
-                  <span className="px-2 py-0.5 rounded-md bg-background text-[11px] font-medium">
-                    {TOPIC_LABELS[scen.topicCategory]}
-                  </span>
+                  <div className="flex items-center gap-1.5">
+                    <span className="w-6 h-6 rounded-lg bg-slate-900 text-white text-[11px] font-bold flex items-center justify-center">
+                      #{idx + 1}
+                    </span>
+                    <span
+                      className={`px-2.5 py-0.5 rounded-full text-[11px] font-semibold border ${theme.badge}`}
+                    >
+                      {TOPIC_LABELS[scen.topicCategory]}
+                    </span>
+                  </div>
+
                   {attempt ? (
-                    <span className="px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700 text-[11px] font-medium">
-                      Đã thực hành
+                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-600 text-white text-[11px] font-bold">
+                      <CheckCircle2 className="w-3 h-3" />
+                      Đã chinh phục
                     </span>
                   ) : (
-                    <span className="px-2 py-0.5 rounded-md bg-zinc-100 text-zinc-600 text-[11px] font-medium">
-                      +{scen.xpReward} XP
+                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-900 border border-amber-300 text-[11px] font-bold">
+                      <Zap className="w-3 h-3 text-amber-600 fill-amber-500" />+
+                      {scen.xpReward} XP
                     </span>
                   )}
                 </div>
-                <p className="text-xs font-semibold leading-snug">{scen.title}</p>
+
+                <p className="text-sm font-bold text-slate-900 leading-snug">
+                  {scen.title}
+                </p>
               </button>
             );
           })}
         </div>
 
-        {/* Khung thực hành tình huống chi tiết bên phải */}
+        {/* Cột phải: Bàn chơi Tình huống Tương tác (7 cột) */}
         {activeScenario && (
-          <div className="lg:col-span-2 bg-surface border border-border rounded-xl p-6 space-y-5">
-            <div className="space-y-2">
-              <div className="flex items-center justify-between gap-2">
-                <span className="inline-flex items-center gap-1.5 text-xs font-medium text-muted">
-                  <Compass className="w-3.5 h-3.5" />
-                  {TOPIC_LABELS[activeScenario.topicCategory]}
+          <div className="lg:col-span-7 bg-white border-2 border-emerald-200/90 rounded-2xl overflow-hidden shadow-sm">
+            {/* Thanh tiêu đề Thử thách */}
+            <div
+              className={`bg-gradient-to-r ${activeTheme.banner} text-white px-6 py-4 flex flex-wrap items-center justify-between gap-2`}
+            >
+              <span className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider">
+                <Compass className="w-4 h-4" />
+                {TOPIC_LABELS[activeScenario.topicCategory]}
+              </span>
+
+              <div className="flex items-center gap-2 text-xs font-bold">
+                <span className="px-2.5 py-1 rounded-full bg-white/20 backdrop-blur-xs inline-flex items-center gap-1">
+                  <Zap className="w-3.5 h-3.5 text-amber-300 fill-amber-300" />+
+                  {activeScenario.xpReward} XP
                 </span>
-                <span className="text-xs text-muted tabular-nums">
-                  Thưởng lần đầu: +{activeScenario.xpReward} XP · +{activeScenario.pointReward} Điểm
+                <span className="px-2.5 py-1 rounded-full bg-white/20 backdrop-blur-xs inline-flex items-center gap-1">
+                  <Gem className="w-3.5 h-3.5 text-sky-200" />+
+                  {activeScenario.pointReward} Điểm
                 </span>
               </div>
-
-              <h2 className="text-lg font-semibold">{activeScenario.title}</h2>
-              <p className="text-sm text-foreground leading-relaxed bg-background p-4 rounded-xl border border-border-strong">
-                {activeScenario.contextDescription}
-              </p>
-              <p className="text-xs font-semibold text-foreground pt-1">
-                {activeScenario.question}
-              </p>
             </div>
 
-            <div className="space-y-2.5">
-              {activeScenario.options.map((opt) => {
-                const isChosen = currentAttempt?.selectedOptionId === opt.id;
-                return (
-                  <button
-                    key={opt.id}
-                    type="button"
-                    onClick={() => submitScenarioChoice(activeScenario.id, opt.id)}
-                    className={`w-full p-4 rounded-xl border text-left transition-colors ${
-                      isChosen
-                        ? "bg-secondary border-primary"
-                        : "bg-surface border-border-strong hover:bg-button-hover"
+            <div className="p-6 space-y-5">
+              {/* Câu chuyện tình huống */}
+              <div className="space-y-3">
+                <h2 className="text-lg sm:text-xl font-bold text-slate-900">
+                  {activeScenario.title}
+                </h2>
+
+                <div className="p-4 rounded-2xl bg-emerald-50/70 border-2 border-emerald-200/80 space-y-1.5">
+                  <span className="text-[11px] font-bold uppercase tracking-wider text-emerald-800 block">
+                    📖 Bối cảnh tình huống:
+                  </span>
+                  <p className="text-sm text-slate-800 leading-relaxed font-medium">
+                    {activeScenario.contextDescription}
+                  </p>
+                </div>
+
+                <p className="text-sm font-bold text-slate-900 pt-1 flex items-center gap-2">
+                  <Sparkles className="w-4 h-4 text-amber-500 shrink-0" />
+                  <span>{activeScenario.question}</span>
+                </p>
+              </div>
+
+              {/* Các lựa chọn A / B / C kiểu nút bấm Gamification 3D */}
+              <div className="space-y-3">
+                {activeScenario.options.map((opt, idx) => {
+                  const isChosen = currentAttempt?.selectedOptionId === opt.id;
+                  const optionLetter = String.fromCharCode(65 + idx); // A, B, C
+
+                  let cardStyle =
+                    "bg-white border-2 border-b-4 border-slate-200 hover:border-emerald-400 hover:bg-emerald-50/30 text-slate-800";
+                  let badgeStyle =
+                    "bg-slate-100 text-slate-700 border border-slate-300";
+
+                  if (isChosen) {
+                    if (opt.isRecommended) {
+                      cardStyle =
+                        "bg-emerald-50 border-2 border-b-4 border-emerald-500 text-emerald-950";
+                      badgeStyle = "bg-emerald-600 text-white";
+                    } else {
+                      cardStyle =
+                        "bg-amber-50 border-2 border-b-4 border-amber-500 text-amber-950";
+                      badgeStyle = "bg-amber-500 text-white";
+                    }
+                  }
+
+                  return (
+                    <button
+                      key={opt.id}
+                      type="button"
+                      onClick={() => submitScenarioChoice(activeScenario.id, opt.id)}
+                      className={`w-full p-4 rounded-2xl text-left transition-all active:translate-y-0.5 ${cardStyle}`}
+                    >
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="flex items-start gap-3">
+                          <span
+                            className={`w-7 h-7 rounded-xl text-xs font-bold flex items-center justify-center shrink-0 mt-0.5 ${badgeStyle}`}
+                          >
+                            {optionLetter}
+                          </span>
+                          <span className="text-xs sm:text-sm font-semibold leading-relaxed">
+                            {opt.text}
+                          </span>
+                        </div>
+                        {isChosen && (
+                          <CheckCircle2
+                            className={`w-5 h-5 shrink-0 mt-0.5 ${
+                              opt.isRecommended
+                                ? "text-emerald-600"
+                                : "text-amber-600"
+                            }`}
+                          />
+                        )}
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* Hộp Phản hồi Gamification & Mở khóa Phần thưởng */}
+              {chosenOption ? (
+                <div className="space-y-4 pt-3 border-t border-slate-200">
+                  <div
+                    className={`p-4 rounded-2xl border-2 space-y-2 ${
+                      chosenOption.isRecommended
+                        ? "bg-emerald-50 border-emerald-300 text-emerald-950"
+                        : "bg-amber-50 border-amber-300 text-amber-950"
                     }`}
                   >
-                    <div className="flex items-start justify-between gap-2">
-                      <span className="text-xs font-medium leading-relaxed">
-                        {opt.text}
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="inline-flex items-center gap-1.5 text-xs font-bold">
+                        {chosenOption.isRecommended ? (
+                          <>
+                            <Award className="w-4 h-4 text-emerald-600" />
+                            <span>Tuyệt vời! Quyết định chuẩn xác & an toàn</span>
+                          </>
+                        ) : (
+                          <>
+                            <ShieldAlert className="w-4 h-4 text-amber-600" />
+                            <span>Gợi ý để xử lý an toàn hơn</span>
+                          </>
+                        )}
                       </span>
-                      {isChosen && (
-                        <CheckCircle2 className="w-4 h-4 text-foreground shrink-0 mt-0.5" />
+
+                      {chosenOption.isRecommended && (
+                        <span className="px-2.5 py-0.5 rounded-full bg-emerald-600 text-white text-[11px] font-bold">
+                          +{activeScenario.xpReward} XP · +{activeScenario.pointReward} Điểm
+                        </span>
                       )}
                     </div>
-                  </button>
-                );
-              })}
+
+                    <p className="text-xs sm:text-sm font-bold">
+                      {chosenOption.immediateFeedback}
+                    </p>
+                    <p className="text-xs leading-relaxed opacity-90">
+                      {chosenOption.detailedExplanation}
+                    </p>
+                  </div>
+
+                  {/* Nhắc nhở quy tắc an toàn */}
+                  <div className="p-3.5 rounded-xl bg-sky-50 border border-sky-200 flex items-start gap-2.5 text-xs text-sky-950">
+                    <ShieldCheck className="w-4 h-4 text-sky-600 shrink-0 mt-0.5" />
+                    <div>
+                      <strong className="font-bold">Ghi nhớ an toàn: </strong>
+                      <span>{activeScenario.safetyReminder}</span>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-end">
+                    <Link
+                      href={`/result/${activeScenario.id}`}
+                      className="h-10 px-5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold inline-flex items-center gap-1.5 shadow-sm"
+                    >
+                      <span>Xem Tổng kết & Nhận Huy hiệu</span>
+                      <ArrowRight className="w-4 h-4" />
+                    </Link>
+                  </div>
+                </div>
+              ) : (
+                <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+                  <span>
+                    👆 Hãy chạm vào một phương án (A, B hoặc C) để kiểm tra phản xạ của bạn!
+                  </span>
+                </div>
+              )}
             </div>
-
-            {/* Phản hồi tức thì & Nút mở trang Kết quả giải thích chi tiết (US-13, US-14) */}
-            {chosenOption ? (
-              <div className="space-y-3 pt-2 border-t border-border">
-                <div
-                  className={`p-4 rounded-xl border space-y-1 ${
-                    chosenOption.isRecommended
-                      ? "bg-emerald-50 border-emerald-200 text-emerald-900"
-                      : "bg-amber-50 border-amber-200 text-amber-900"
-                  }`}
-                >
-                  <p className="text-xs font-semibold">
-                    {chosenOption.immediateFeedback}
-                  </p>
-                  <p className="text-xs leading-relaxed">
-                    {chosenOption.detailedExplanation}
-                  </p>
-                </div>
-
-                <div className="flex items-center justify-end">
-                  <Link
-                    href={`/result/${activeScenario.id}`}
-                    className="h-9 px-4 rounded-xl bg-primary hover:bg-primary-hover text-primary-foreground text-xs font-medium inline-flex items-center gap-1.5"
-                  >
-                    <span>Xem kết quả & giải thích chi tiết</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </Link>
-                </div>
-              </div>
-            ) : (
-              <div className="pt-2 border-t border-border flex items-center justify-between text-xs text-muted">
-                <span>Hãy chọn một phương án ở trên để xem phản hồi và kết quả chi tiết.</span>
-                <button
-                  type="button"
-                  disabled
-                  className="h-9 px-4 rounded-xl bg-secondary text-muted text-xs font-medium cursor-not-allowed"
-                >
-                  Xem kết quả chi tiết
-                </button>
-              </div>
-            )}
           </div>
         )}
       </div>
     </div>
   );
 }
-
