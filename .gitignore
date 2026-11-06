@@ -1,0 +1,32 @@
+# Dependencies & Build outputs
+node_modules/
+.next/
+out/
+build/
+dist/
+
+# Environment variables & Secrets (NFR-S07)
+.env
+.env.*
+!.env.example
+*firebase-adminsdk*.json
+service-account*.json
+
+# Vercel & Firebase local artifacts / unused init folders
+.vercel/
+.firebase/
+functions/
+dataconnect/
+src/dataconnect-generated/
+src/dataconnect-admin-generated/
+firestore.rules
+firestore.indexes.json
+firebase-debug.log*
+
+# TypeScript, Docs & IDE
+*.tsbuildinfo
+next-env.d.ts
+*.pdf
+.DS_Store
+Thumbs.db
+
