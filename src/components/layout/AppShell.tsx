@@ -22,6 +22,7 @@ import {
 } from "lucide-react";
 import { useGenUp } from "@/context/GenUpContext";
 import { Avatar2D } from "@/components/avatar/Avatar2D";
+import { GoogleSignInButton } from "@/components/auth/GoogleSignInButton";
 
 function formatSeconds(sec: number): string {
   const m = Math.floor(sec / 60);
@@ -258,6 +259,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               <Flame className="w-3.5 h-3.5 text-amber-700" />
               <span>{profile.currentStreak} ngày</span>
             </div>
+
+            <GoogleSignInButton compact />
 
             <Link
               href={isParentZone ? "/dashboard" : "/parent"}

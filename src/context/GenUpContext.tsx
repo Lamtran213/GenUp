@@ -225,6 +225,20 @@ export function GenUpProvider({ children }: { children: React.ReactNode }) {
     };
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(stateToSave));
+      const rawFbUser = localStorage.getItem("genup_firebase_user");
+      if (rawFbUser) {
+        const fbUser = JSON.parse(rawFbUser) as { uid?: string };
+        if (fbUser?.uid) {
+          fetch("/api/supabase/sync", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              firebaseUid: fbUser.uid,
+              ...profile,
+            }),
+          }).catch(() => null);
+        }
+      }
     } catch {
       // Bỏ qua nếu trình duyệt chặn quota
     }

@@ -13,6 +13,7 @@ import {
   Users,
 } from "lucide-react";
 import { useGenUp } from "@/context/GenUpContext";
+import { GoogleSignInButton } from "@/components/auth/GoogleSignInButton";
 
 export default function LandingPage() {
   const { profile, modules } = useGenUp();
@@ -36,11 +37,12 @@ export default function LandingPage() {
         </div>
 
         <div className="flex items-center gap-2.5">
+          <GoogleSignInButton />
           <Link
             href="/login"
-            className="h-10 px-4 rounded-xl border border-border-strong bg-surface hover:bg-button-hover text-sm font-medium flex items-center"
+            className="h-10 px-4 rounded-xl border border-border-strong bg-surface hover:bg-button-hover text-sm font-medium hidden sm:flex items-center"
           >
-            Đăng nhập / Chọn khu vực
+            Chọn khu vực
           </Link>
           <Link
             href="/dashboard"
