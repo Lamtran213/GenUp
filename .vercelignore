@@ -1,0 +1,8 @@
+# Bỏ qua thư mục Mobile (.NET MAUI) và các thư mục không cần thiết khi deploy Web lên Vercel
+genup_maui/
+functions/
+dataconnect/
+supabase/
+*.pdf
+*.md
+

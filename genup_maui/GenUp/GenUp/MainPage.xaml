@@ -1,0 +1,511 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="GenUp.MainPage"
+             BackgroundColor="{StaticResource EduBgBase}">
+
+    <Grid RowDefinitions="Auto,*,Auto">
+        <!-- Ambient Aurora Mesh Background (Synchronized with Web Liquid Glass Orbs) -->
+        <Grid Grid.RowSpan="3" InputTransparent="True">
+            <Ellipse WidthRequest="340" HeightRequest="340"
+                     HorizontalOptions="Start" VerticalOptions="Start"
+                     Margin="-90,-70,0,0"
+                     Fill="#4534D399" />
+            <Ellipse WidthRequest="320" HeightRequest="320"
+                     HorizontalOptions="End" VerticalOptions="Start"
+                     Margin="0,40,-90,0"
+                     Fill="#4038BDF8" />
+            <Ellipse WidthRequest="300" HeightRequest="300"
+                     HorizontalOptions="Center" VerticalOptions="End"
+                     Margin="0,0,0,-80"
+                     Fill="#38FBBF24" />
+        </Grid>
+
+        <!-- TOP FLOATING LIQUID GLASS PLAYER HUD -->
+        <Border Grid.Row="0"
+                Margin="14,12,14,6"
+                Style="{StaticResource LiquidGlassFloatingBar}">
+            <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
+                <!-- Brand & Level Pill -->
+                <HorizontalStackLayout Grid.Column="0" Spacing="10" VerticalOptions="Center">
+                    <Border BackgroundColor="{StaticResource EduEmerald}"
+                            WidthRequest="38" HeightRequest="38"
+                            Stroke="#FFFFFF" StrokeThickness="1.5">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="12" />
+                        </Border.StrokeShape>
+                        <Label Text="G" TextColor="White" FontAttributes="Bold" FontSize="17"
+                               HorizontalOptions="Center" VerticalOptions="Center" />
+                    </Border>
+                    <VerticalStackLayout Spacing="1" VerticalOptions="Center">
+                        <Label Text="GenUp Edu" TextColor="{StaticResource EduInk}" FontAttributes="Bold" FontSize="14" />
+                        <Label x:Name="HudLevelLabel" Text="Học sinh · Lv.2" TextColor="{StaticResource EduEmerald}" FontAttributes="Bold" FontSize="11" />
+                    </VerticalStackLayout>
+                </HorizontalStackLayout>
+
+                <!-- XP & Reward Badges -->
+                <HorizontalStackLayout Grid.Column="1" HorizontalOptions="Center" Spacing="6" VerticalOptions="Center">
+                    <Border BackgroundColor="{StaticResource EduAmberLight}" Stroke="#FDE68A" StrokeThickness="1" Padding="9,5">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="99" />
+                        </Border.StrokeShape>
+                        <Label x:Name="HudXpLabel" Text="⚡ 140 XP" TextColor="#B45309" FontAttributes="Bold" FontSize="11" />
+                    </Border>
+                    <Border BackgroundColor="{StaticResource EduEmeraldLight}" Stroke="#A7F3D0" StrokeThickness="1" Padding="9,5">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="99" />
+                        </Border.StrokeShape>
+                        <Label x:Name="HudPointsLabel" Text="💎 85 Điểm" TextColor="#047857" FontAttributes="Bold" FontSize="11" />
+                    </Border>
+                </HorizontalStackLayout>
+
+                <!-- Streak Pill -->
+                <Border Grid.Column="2" BackgroundColor="#FFFBEB" Stroke="#FDE68A" StrokeThickness="1" Padding="10,5" VerticalOptions="Center">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="99" />
+                    </Border.StrokeShape>
+                    <Label x:Name="HudStreakLabel" Text="🔥 3 ngày" TextColor="#D97706" FontAttributes="Bold" FontSize="11" />
+                </Border>
+            </Grid>
+        </Border>
+
+        <!-- MAIN SCROLLABLE CONTENT -->
+        <ScrollView Grid.Row="1" Padding="14,6,14,16">
+            <VerticalStackLayout Spacing="14">
+
+                <!-- ==================== TAB 1: BẢN ĐỒ HỌC TẬP (LEARN & QUESTS) ==================== -->
+                <VerticalStackLayout x:Name="LearnTabSection" Spacing="14" IsVisible="True">
+
+                    <!-- Interactive Topic Carousel Card (Liquid Glass Hero) -->
+                    <Border Style="{StaticResource LiquidGlassCard}">
+                        <VerticalStackLayout Spacing="12">
+                            <Grid ColumnDefinitions="*,Auto">
+                                <Border BackgroundColor="{StaticResource EduEmeraldLight}" Stroke="#A7F3D0" Padding="10,4" HorizontalOptions="Start">
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="99" />
+                                    </Border.StrokeShape>
+                                    <Label x:Name="SlideBadgeLabel"
+                                           Text="🌱 CHỦ ĐỀ 1 · CƠ THỂ &amp; DẬY THÌ"
+                                           TextColor="#047857"
+                                           FontAttributes="Bold"
+                                           FontSize="11" />
+                                </Border>
+                                <Label Grid.Column="1"
+                                       x:Name="SlideCounterLabel"
+                                       Text="Slide 1 / 4"
+                                       TextColor="{StaticResource EduMuted}"
+                                       FontAttributes="Bold"
+                                       FontSize="11"
+                                       VerticalOptions="Center" />
+                            </Grid>
+
+                            <Label x:Name="SlideTitleLabel"
+                                   Text="Hiểu cơ thể tuổi dậy thì khoa học, không ngại ngùng"
+                                   TextColor="{StaticResource EduInk}"
+                                   FontAttributes="Bold"
+                                   FontSize="20"
+                                   LineHeight="1.15" />
+
+                            <Label x:Name="SlideDescLabel"
+                                   Text="Khám phá những thay đổi tự nhiên về thể chất và cảm xúc ở tuổi 11–15 qua bài học phân bước kèm tình huống thực tế."
+                                   TextColor="{StaticResource EduMuted}"
+                                   FontSize="13"
+                                   LineHeight="1.3" />
+
+                            <!-- XP Progress inside Hero -->
+                            <Border BackgroundColor="#B3FFFFFF" Stroke="#FFFFFF" StrokeThickness="1" Padding="12,10">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="16" />
+                                </Border.StrokeShape>
+                                <VerticalStackLayout Spacing="6">
+                                    <Grid ColumnDefinitions="*,Auto">
+                                        <Label x:Name="SlideQuestLabel"
+                                               Text="🎯 Nhiệm vụ: Sự thay đổi tự nhiên tuổi dậy thì"
+                                               TextColor="{StaticResource EduInk}"
+                                               FontAttributes="Bold"
+                                               FontSize="12" />
+                                        <Label x:Name="SlideRewardLabel"
+                                               Grid.Column="1"
+                                               Text="+50 XP · +25 Điểm"
+                                               TextColor="{StaticResource EduEmerald}"
+                                               FontAttributes="Bold"
+                                               FontSize="11" />
+                                    </Grid>
+                                    <ProgressBar x:Name="HeroProgressBar" Progress="0.56" ProgressColor="{StaticResource EduEmerald}" />
+                                </VerticalStackLayout>
+                            </Border>
+
+                            <!-- Carousel Controls -->
+                            <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="8">
+                                <Button Grid.Column="0"
+                                        Text="← Trước"
+                                        Style="{StaticResource EduGlassButton}"
+                                        Clicked="OnPrevSlideClicked" />
+                                <Button Grid.Column="1"
+                                        Text="Vào bài học (+25 XP) →"
+                                        Style="{StaticResource EduPrimaryButton}"
+                                        Clicked="OnQuickStudyClicked" />
+                                <Button Grid.Column="2"
+                                        Text="Tiếp →"
+                                        Style="{StaticResource EduGlassButton}"
+                                        Clicked="OnNextSlideClicked" />
+                            </Grid>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Daily Quests (Nhiệm vụ Hôm nay) -->
+                    <Border Style="{StaticResource LiquidGlassCard}">
+                        <VerticalStackLayout Spacing="10">
+                            <Grid ColumnDefinitions="*,Auto">
+                                <Label Text="🎯 Nhiệm vụ Hôm nay (Daily Quests)"
+                                       TextColor="{StaticResource EduInk}"
+                                       FontAttributes="Bold"
+                                       FontSize="15" />
+                                <Label x:Name="QuestStatusCountLabel"
+                                       Grid.Column="1"
+                                       Text="1/3 hoàn thành"
+                                       TextColor="{StaticResource EduEmerald}"
+                                       FontAttributes="Bold"
+                                       FontSize="12" />
+                            </Grid>
+
+                            <Border BackgroundColor="#B8ECFDF5" Stroke="#A7F3D0" StrokeThickness="1" Padding="12,10">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="16" />
+                                </Border.StrokeShape>
+                                <Grid ColumnDefinitions="*,Auto">
+                                    <VerticalStackLayout Spacing="2">
+                                        <Label Text="✅ Hoàn thành 1 bài học kiến thức" TextColor="#065F46" FontAttributes="Bold" FontSize="13" />
+                                        <Label Text="Thưởng: +20 XP · +25 Điểm" TextColor="#047857" FontSize="11" />
+                                    </VerticalStackLayout>
+                                    <Label Grid.Column="1" Text="Đã nhận" TextColor="#059669" FontAttributes="Bold" FontSize="12" VerticalOptions="Center" />
+                                </Grid>
+                            </Border>
+
+                            <Border BackgroundColor="#B8FFFFFF" Stroke="#FFFFFF" StrokeThickness="1" Padding="12,10">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="16" />
+                                </Border.StrokeShape>
+                                <Grid ColumnDefinitions="*,Auto">
+                                    <VerticalStackLayout Spacing="2">
+                                        <Label Text="🧭 Xử lý 1 tình huống tương tác an toàn" TextColor="{StaticResource EduInk}" FontAttributes="Bold" FontSize="13" />
+                                        <Label Text="Thưởng: +30 XP · +20 Điểm" TextColor="{StaticResource EduMuted}" FontSize="11" />
+                                    </VerticalStackLayout>
+                                    <Button Grid.Column="1"
+                                            Text="Làm ngay"
+                                            Style="{StaticResource EduGlassButton}"
+                                            Clicked="OnOpenScenariosTabClicked" />
+                                </Grid>
+                            </Border>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- 4 Core Learning Pillars (Synchronized with Web) -->
+                    <Label Text="🗺️ 4 Chặng Học Tập Khoa Học (Lớp 6–9)"
+                           TextColor="{StaticResource EduInk}"
+                           FontAttributes="Bold"
+                           FontSize="15"
+                           Margin="4,2,0,0" />
+
+                    <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto" ColumnSpacing="10" RowSpacing="10">
+                        <Border Grid.Row="0" Grid.Column="0" Style="{StaticResource LiquidGlassCard}" Padding="14">
+                            <VerticalStackLayout Spacing="6">
+                                <Label Text="🌱 Cơ thể &amp; Dậy thì" TextColor="#047857" FontAttributes="Bold" FontSize="13" />
+                                <Label Text="Thay đổi sinh lý &amp; chăm sóc bản thân khoa học." TextColor="{StaticResource EduMuted}" FontSize="11" />
+                                <Label Text="+50 XP" TextColor="{StaticResource EduEmerald}" FontAttributes="Bold" FontSize="11" />
+                            </VerticalStackLayout>
+                        </Border>
+
+                        <Border Grid.Row="0" Grid.Column="1" Style="{StaticResource LiquidGlassCard}" Padding="14">
+                            <VerticalStackLayout Spacing="6">
+                                <Label Text="🛡️ Ranh giới &amp; Đồng thuận" TextColor="#0369A1" FontAttributes="Bold" FontSize="13" />
+                                <Label Text="Quy tắc vùng an toàn &amp; quyền nói Không." TextColor="{StaticResource EduMuted}" FontSize="11" />
+                                <Label Text="+50 XP" TextColor="{StaticResource EduSky}" FontAttributes="Bold" FontSize="11" />
+                            </VerticalStackLayout>
+                        </Border>
+
+                        <Border Grid.Row="1" Grid.Column="0" Style="{StaticResource LiquidGlassCard}" Padding="14">
+                            <VerticalStackLayout Spacing="6">
+                                <Label Text="🌐 An toàn trên mạng" TextColor="#6D28D9" FontAttributes="Bold" FontSize="13" />
+                                <Label Text="Bảo vệ hình ảnh &amp; chống dụ dỗ qua mạng." TextColor="{StaticResource EduMuted}" FontSize="11" />
+                                <Label Text="+60 XP" TextColor="{StaticResource EduViolet}" FontAttributes="Bold" FontSize="11" />
+                            </VerticalStackLayout>
+                        </Border>
+
+                        <Border Grid.Row="1" Grid.Column="1" Style="{StaticResource LiquidGlassCard}" Padding="14">
+                            <VerticalStackLayout Spacing="6">
+                                <Label Text="💛 Cảm xúc &amp; Tâm lý" TextColor="#B45309" FontAttributes="Bold" FontSize="13" />
+                                <Label Text="Tình bạn trong sáng &amp; tôn trọng sự khác biệt." TextColor="{StaticResource EduMuted}" FontSize="11" />
+                                <Label Text="+50 XP" TextColor="{StaticResource EduAmber}" FontAttributes="Bold" FontSize="11" />
+                            </VerticalStackLayout>
+                        </Border>
+                    </Grid>
+                </VerticalStackLayout>
+
+                <!-- ==================== TAB 2: ĐẤU TRƯỜNG TÌNH HUỐNG (SCENARIO ARENA) ==================== -->
+                <VerticalStackLayout x:Name="ScenariosTabSection" Spacing="14" IsVisible="False">
+                    <Border Style="{StaticResource LiquidGlassCard}">
+                        <VerticalStackLayout Spacing="12">
+                            <Grid ColumnDefinitions="*,Auto">
+                                <Border BackgroundColor="{StaticResource EduSkyLight}" Stroke="#BAE6FD" Padding="10,4" HorizontalOptions="Start">
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="99" />
+                                    </Border.StrokeShape>
+                                    <Label x:Name="ScenarioCategoryLabel"
+                                           Text="🛡️ RANH GIỚI &amp; ĐỒNG THUẬN"
+                                           TextColor="#0369A1"
+                                           FontAttributes="Bold"
+                                           FontSize="11" />
+                                </Border>
+                                <Label Grid.Column="1"
+                                       Text="Thưởng: +30 XP · +20 Điểm"
+                                       TextColor="{StaticResource EduEmerald}"
+                                       FontAttributes="Bold"
+                                       FontSize="11"
+                                       VerticalOptions="Center" />
+                            </Grid>
+
+                            <Label x:Name="ScenarioTitleLabel"
+                                   Text="Sự cố bất ngờ trong giờ ra chơi"
+                                   TextColor="{StaticResource EduInk}"
+                                   FontAttributes="Bold"
+                                   FontSize="18" />
+
+                            <Border BackgroundColor="#B8FFFFFF" Stroke="#FFFFFF" StrokeThickness="1.5" Padding="14">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="16" />
+                                </Border.StrokeShape>
+                                <Label x:Name="ScenarioContextLabel"
+                                       Text="Trong giờ ra chơi ở trường, bạn nữ cùng bàn phát hiện vệt dâu kinh nguyệt thấm ra váy đồng phục và đang rất hoảng sợ, ngồi im tại chỗ không dám đứng dậy."
+                                       TextColor="{StaticResource EduInk}"
+                                       FontSize="13"
+                                       LineHeight="1.35" />
+                            </Border>
+
+                            <Label Text="Nếu là bạn cùng lớp lúc đó, bạn sẽ chọn cách xử lý nào?"
+                                   TextColor="{StaticResource EduMuted}"
+                                   FontAttributes="Bold"
+                                   FontSize="12" />
+
+                            <Button x:Name="ScenarioOptionABtn"
+                                    Text="A. Đưa áo khoác buộc ngang hông giúp bạn che lại và đi cùng bạn xuống phòng y tế."
+                                    Style="{StaticResource EduGlassButton}"
+                                    Clicked="OnScenarioOptionAClicked" />
+
+                            <Button x:Name="ScenarioOptionBBtn"
+                                    Text="B. Nói to cho cả nhóm bạn xung quanh biết để hỏi xem ai có đồ vệ sinh cho mượn."
+                                    Style="{StaticResource EduGlassButton}"
+                                    Clicked="OnScenarioOptionBClicked" />
+
+                            <Button x:Name="ScenarioOptionCBtn"
+                                    Text="C. Giả vờ không thấy vì ngại liên quan đến chuyện tế nhị."
+                                    Style="{StaticResource EduGlassButton}"
+                                    Clicked="OnScenarioOptionCClicked" />
+
+                            <!-- Instant Non-Judgmental Feedback Box -->
+                            <Border x:Name="ScenarioFeedbackBox"
+                                    IsVisible="False"
+                                    BackgroundColor="#D9ECFDF5"
+                                    Stroke="#6EE7B7"
+                                    StrokeThickness="1.5"
+                                    Padding="14">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="16" />
+                                </Border.StrokeShape>
+                                <VerticalStackLayout Spacing="4">
+                                    <Label x:Name="ScenarioFeedbackTitle"
+                                           Text="🌟 Lựa chọn rất tinh tế và đáng tin cậy!"
+                                           TextColor="#065F46"
+                                           FontAttributes="Bold"
+                                           FontSize="14" />
+                                    <Label x:Name="ScenarioFeedbackBody"
+                                           Text="Cách xử lý này vừa giải quyết ngay sự bối rối về trang phục, vừa giúp bạn ấy cảm thấy được tôn trọng và an toàn (+30 XP · +20 Điểm)."
+                                           TextColor="#047857"
+                                           FontSize="12"
+                                           LineHeight="1.3" />
+                                </VerticalStackLayout>
+                            </Border>
+
+                            <Button Text="Đổi tình huống thực hành khác →"
+                                    Style="{StaticResource EduPrimaryButton}"
+                                    Clicked="OnNextScenarioClicked" />
+                        </VerticalStackLayout>
+                    </Border>
+                </VerticalStackLayout>
+
+                <!-- ==================== TAB 3: HỎI GENDIO (PRIVATE SAFE AI Q&A) ==================== -->
+                <VerticalStackLayout x:Name="GendioTabSection" Spacing="14" IsVisible="False">
+                    <Border Style="{StaticResource LiquidGlassCard}">
+                        <VerticalStackLayout Spacing="12">
+                            <HorizontalStackLayout Spacing="8">
+                                <Border BackgroundColor="{StaticResource EduEmeraldLight}" Stroke="#A7F3D0" Padding="10,4">
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="99" />
+                                    </Border.StrokeShape>
+                                    <Label Text="🤖 HỎI GENDIO ẨN DANH (NFR-S06)"
+                                           TextColor="#047857"
+                                           FontAttributes="Bold"
+                                           FontSize="11" />
+                                </Border>
+                            </HorizontalStackLayout>
+
+                            <Label Text="Không gian hỏi đáp khoa học &amp; tôn trọng quyền riêng tư"
+                                   TextColor="{StaticResource EduInk}"
+                                   FontAttributes="Bold"
+                                   FontSize="18" />
+
+                            <Label Text="Mọi câu hỏi với Gendio được bảo mật hoàn toàn và không hiển thị trong bảng điều khiển của Phụ huynh."
+                                   TextColor="{StaticResource EduMuted}"
+                                   FontSize="12" />
+
+                            <Border BackgroundColor="#D9FFFFFF" Stroke="#FFFFFF" StrokeThickness="1.5" Padding="14">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="16" />
+                                </Border.StrokeShape>
+                                <VerticalStackLayout Spacing="6">
+                                    <Label Text="💬 Gendio trả lời:"
+                                           TextColor="{StaticResource EduEmerald}"
+                                           FontAttributes="Bold"
+                                           FontSize="12" />
+                                    <Label x:Name="GendioReplyLabel"
+                                           Text="Chào bạn! Mình là Gendio. Bạn có thắc mắc gì về tuổi dậy thì, ranh giới an toàn hay cảm xúc học đường? Hãy nhập câu hỏi bên dưới nhé!"
+                                           TextColor="{StaticResource EduInk}"
+                                           FontSize="13"
+                                           LineHeight="1.35" />
+                                </VerticalStackLayout>
+                            </Border>
+
+                            <Border BackgroundColor="#E6FFFFFF" Stroke="#FFFFFF" StrokeThickness="1.5" Padding="10,4">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="14" />
+                                </Border.StrokeShape>
+                                <Entry x:Name="GendioPromptEntry"
+                                       Placeholder="Ví dụ: Làm sao từ chối khi người lạ xin ảnh cá nhân?"
+                                       TextColor="{StaticResource EduInk}"
+                                       PlaceholderColor="#64748B"
+                                       FontSize="13" />
+                            </Border>
+
+                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                                <Button Grid.Column="0"
+                                        x:Name="AskGendioBtn"
+                                        Text="Gửi câu hỏi tới Gendio Cloud →"
+                                        Style="{StaticResource EduPrimaryButton}"
+                                        Clicked="OnAskGendioClicked" />
+                                <Button Grid.Column="1"
+                                        Text="Gợi ý mẫu"
+                                        Style="{StaticResource EduGlassButton}"
+                                        Clicked="OnSampleGendioPromptClicked" />
+                            </Grid>
+                        </VerticalStackLayout>
+                    </Border>
+                </VerticalStackLayout>
+
+                <!-- ==================== TAB 4: HỒ SƠ & CLOUD FCM MOBILE ==================== -->
+                <VerticalStackLayout x:Name="ProfileTabSection" Spacing="14" IsVisible="False">
+                    <Border Style="{StaticResource LiquidGlassCard}">
+                        <VerticalStackLayout Spacing="12">
+                            <Border BackgroundColor="{StaticResource EduVioletLight}" Stroke="#DDD6FE" Padding="10,4" HorizontalOptions="Start">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="99" />
+                                </Border.StrokeShape>
+                                <Label Text="☁️ ĐỒNG BỘ WEB &amp; MOBILE CLOUD"
+                                       TextColor="#6D28D9"
+                                       FontAttributes="Bold"
+                                       FontSize="11" />
+                            </Border>
+
+                            <Label Text="Kết nối GenUp Cloud &amp; Firebase FCM Mobile"
+                                   TextColor="{StaticResource EduInk}"
+                                   FontAttributes="Bold"
+                                   FontSize="18" />
+
+                            <Label Text="Đồng bộ trực tiếp với hệ thống GenUp Web (genup-beta.vercel.app), Supabase PostgreSQL và thông báo đẩy Firebase Cloud Messaging."
+                                   TextColor="{StaticResource EduMuted}"
+                                   FontSize="12"
+                                   LineHeight="1.3" />
+
+                            <Border BackgroundColor="#D9FFFFFF" Stroke="#FFFFFF" StrokeThickness="1.5" Padding="14">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="16" />
+                                </Border.StrokeShape>
+                                <VerticalStackLayout Spacing="4">
+                                    <Label Text="Trạng thái đồng bộ Cloud:"
+                                           TextColor="{StaticResource EduMuted}"
+                                           FontAttributes="Bold"
+                                           FontSize="11" />
+                                    <Label x:Name="CloudStatusLabel"
+                                           Text="Sẵn sàng kết nối với https://genup-beta.vercel.app"
+                                           TextColor="{StaticResource EduEmerald}"
+                                           FontAttributes="Bold"
+                                           FontSize="13" />
+                                </VerticalStackLayout>
+                            </Border>
+
+                            <Button x:Name="SyncFcmBtn"
+                                    Text="🔔 Đăng ký Thiết bị Mobile FCM lên Supabase"
+                                    Style="{StaticResource EduPrimaryButton}"
+                                    Clicked="OnRegisterMobileFcmClicked" />
+
+                            <Button Text="🌐 Mở GenUp Web App (genup-beta.vercel.app)"
+                                    Style="{StaticResource EduGlassButton}"
+                                    Clicked="OnOpenWebPortalClicked" />
+                        </VerticalStackLayout>
+                    </Border>
+                </VerticalStackLayout>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- BOTTOM FLOATING LIQUID GLASS NAVIGATION BAR -->
+        <Border Grid.Row="2"
+                Margin="14,4,14,12"
+                Style="{StaticResource LiquidGlassFloatingBar}">
+            <Grid ColumnDefinitions="*,*,*,*" ColumnSpacing="6">
+                <Button x:Name="NavLearnBtn"
+                        Grid.Column="0"
+                        Text="🗺️ Học tập"
+                        BackgroundColor="{StaticResource EduEmerald}"
+                        TextColor="White"
+                        FontAttributes="Bold"
+                        FontSize="12"
+                        CornerRadius="14"
+                        Padding="6,10"
+                        Clicked="OnTabLearnClicked" />
+
+                <Button x:Name="NavScenariosBtn"
+                        Grid.Column="1"
+                        Text="🧭 Tình huống"
+                        BackgroundColor="Transparent"
+                        TextColor="{StaticResource EduInk}"
+                        FontAttributes="Bold"
+                        FontSize="12"
+                        CornerRadius="14"
+                        Padding="6,10"
+                        Clicked="OnTabScenariosClicked" />
+
+                <Button x:Name="NavGendioBtn"
+                        Grid.Column="2"
+                        Text="💬 Gendio"
+                        BackgroundColor="Transparent"
+                        TextColor="{StaticResource EduInk}"
+                        FontAttributes="Bold"
+                        FontSize="12"
+                        CornerRadius="14"
+                        Padding="6,10"
+                        Clicked="OnTabGendioClicked" />
+
+                <Button x:Name="NavProfileBtn"
+                        Grid.Column="3"
+                        Text="🔔 Cloud"
+                        BackgroundColor="Transparent"
+                        TextColor="{StaticResource EduInk}"
+                        FontAttributes="Bold"
+                        FontSize="12"
+                        CornerRadius="14"
+                        Padding="6,10"
+                        Clicked="OnTabProfileClicked" />
+            </Grid>
+        </Border>
+    </Grid>
+</ContentPage>

@@ -142,9 +142,16 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const activeNav = isParentZone ? parentNav : studentNav;
 
   return (
-    <div className="min-h-screen bg-background text-foreground flex flex-col lg:flex-row">
-      {/* Sidebar Edu Gamification trên Desktop */}
-      <aside className="hidden lg:flex lg:w-64 lg:flex-col lg:fixed lg:inset-y-0 bg-surface border-r border-border-strong z-20">
+    <div className="relative min-h-screen bg-background text-foreground flex flex-col lg:flex-row">
+      {/* Lớp đốm màu Aurora Ambient phía sau để tấm kính Liquid Glass khúc xạ ánh sáng */}
+      <div className="pointer-events-none fixed inset-0 overflow-hidden z-0">
+        <div className="absolute -top-28 -left-24 w-96 h-96 rounded-full bg-emerald-400/20 blur-3xl" />
+        <div className="absolute top-1/4 -right-24 w-96 h-96 rounded-full bg-sky-400/20 blur-3xl" />
+        <div className="absolute -bottom-28 left-1/3 w-96 h-96 rounded-full bg-amber-300/15 blur-3xl" />
+      </div>
+
+      {/* Sidebar Edu Gamification Liquid Glass trên Desktop */}
+      <aside className="hidden lg:flex lg:w-64 lg:flex-col lg:fixed lg:inset-y-0 liquid-glass-floating border-r border-white/80 z-20">
         <div className="h-16 px-5 flex items-center justify-between border-b border-border-strong">
           <Link href="/" className="flex items-center gap-2.5">
             <span className="w-9 h-9 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white flex items-center justify-center font-bold text-sm shadow-sm">
@@ -302,9 +309,9 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       </aside>
 
       {/* Khung chính */}
-      <div className="flex-1 lg:pl-64 flex flex-col min-w-0 pb-16 lg:pb-0">
-        {/* Header Gamification HUD dính đầu trang */}
-        <header className="h-14 px-4 lg:px-8 bg-white/95 backdrop-blur-md border-b border-border-strong sticky top-0 z-10 flex items-center justify-between gap-3">
+      <div className="relative z-10 flex-1 lg:pl-64 flex flex-col min-w-0 pb-16 lg:pb-0">
+        {/* Header Gamification Liquid Glass HUD dính đầu trang */}
+        <header className="h-14 px-4 lg:px-8 liquid-glass-floating border-b border-white/80 sticky top-0 z-10 flex items-center justify-between gap-3">
           <div className="flex items-center gap-2.5 min-w-0">
             <Link href="/" className="lg:hidden flex items-center gap-2">
               <span className="w-7 h-7 rounded-lg bg-emerald-600 text-white flex items-center justify-center font-bold text-xs">
@@ -390,8 +397,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         </main>
       </div>
 
-      {/* Thanh điều hướng dưới cùng trên Mobile */}
-      <nav className="lg:hidden fixed bottom-0 inset-x-0 bg-white border-t border-border-strong z-20 grid grid-cols-5 h-16 px-1">
+      {/* Thanh điều hướng dưới cùng Liquid Glass trên Mobile */}
+      <nav className="lg:hidden fixed bottom-0 inset-x-0 liquid-glass-floating border-t border-white/80 z-20 grid grid-cols-5 h-16 px-1">
         {(isParentZone
           ? [
               { href: "/parent", label: "Tổng quan", icon: ShieldCheck },

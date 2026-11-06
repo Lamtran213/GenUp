@@ -106,9 +106,9 @@ export default function StudentDashboardPage() {
         </div>
       </section>
 
-      {/* Hàng 4 thẻ chỉ số Gamification rực rỡ (US-19, US-20) */}
+      {/* Hàng 4 thẻ chỉ số Gamification Liquid Glass rực rỡ (US-19, US-20) */}
       <section className="grid grid-cols-2 lg:grid-cols-4 gap-3.5">
-        <div className="bg-white border-2 border-emerald-200 rounded-2xl p-4 flex items-start justify-between shadow-2xs">
+        <div className="liquid-glass border-2 border-white/85 rounded-2xl p-4 flex items-start justify-between">
           <div className="space-y-1">
             <p className="text-xs font-semibold text-emerald-800">Bài học hoàn thành</p>
             <p className="text-2xl font-extrabold text-slate-900 tabular-nums">
@@ -121,7 +121,7 @@ export default function StudentDashboardPage() {
           </div>
         </div>
 
-        <div className="bg-white border-2 border-rose-200 rounded-2xl p-4 flex items-start justify-between shadow-2xs">
+        <div className="liquid-glass border-2 border-white/85 rounded-2xl p-4 flex items-start justify-between">
           <div className="space-y-1">
             <p className="text-xs font-semibold text-rose-800">Tình huống đã giải</p>
             <p className="text-2xl font-extrabold text-slate-900 tabular-nums">
@@ -134,7 +134,7 @@ export default function StudentDashboardPage() {
           </div>
         </div>
 
-        <div className="bg-white border-2 border-sky-200 rounded-2xl p-4 flex items-start justify-between shadow-2xs">
+        <div className="liquid-glass border-2 border-white/85 rounded-2xl p-4 flex items-start justify-between">
           <div className="space-y-1">
             <p className="text-xs font-semibold text-sky-800">Kho báu XP & Điểm</p>
             <p className="text-2xl font-extrabold text-slate-900 tabular-nums">
@@ -149,7 +149,7 @@ export default function StudentDashboardPage() {
           </div>
         </div>
 
-        <div className="bg-white border-2 border-amber-200 rounded-2xl p-4 flex items-start justify-between shadow-2xs">
+        <div className="liquid-glass border-2 border-white/85 rounded-2xl p-4 flex items-start justify-between">
           <div className="space-y-1">
             <p className="text-xs font-semibold text-amber-900">Chuỗi Learning Streak</p>
             <p className="text-2xl font-extrabold text-slate-900 tabular-nums">
@@ -167,7 +167,7 @@ export default function StudentDashboardPage() {
 
       {/* Khối Nhiệm vụ Bài học Tiếp theo (US-17, US-18) & Nhiệm vụ Hằng ngày (US-24) */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
-        <div className="lg:col-span-2 bg-white border-2 border-emerald-200 rounded-2xl p-6 flex flex-col justify-between gap-4 shadow-2xs">
+        <div className="lg:col-span-2 liquid-glass border-2 border-white/85 rounded-2xl p-6 flex flex-col justify-between gap-4">
           <div className="space-y-3">
             <div className="flex items-center justify-between gap-2">
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold">

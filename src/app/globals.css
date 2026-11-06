@@ -5,41 +5,46 @@
   color-scheme: light;
   --app-font: "Inter", ui-sans-serif, system-ui, sans-serif;
 
-  /* ===== BẢNG MÀU EDU GAMIFICATION (TƯƠI SÁNG, NĂNG ĐỘNG CHO THCS) ===== */
+  /* ===== BẢNG MÀU EDU GAMIFICATION + LIQUID GLASS (ĐỒNG BỘ WEB & MAUI) ===== */
   --primary: #059669;
   --primary-hover: #047857;
   --primary-foreground: #ffffff;
   --primary-light: #ecfdf5;
-  /* ===================================================================== */
 
-  --background: #f3faf7;
-  --surface: #ffffff;
+  --glass-bg: rgba(255, 255, 255, 0.68);
+  --glass-floating: rgba(255, 255, 255, 0.82);
+  --glass-border: rgba(255, 255, 255, 0.82);
+  --glass-shadow: 0 8px 30px -4px rgba(5, 150, 105, 0.08), 0 2px 6px -1px rgba(15, 23, 42, 0.04);
+  /* ========================================================================= */
+
+  --background: #ecf7f2;
+  --surface: rgba(255, 255, 255, 0.72);
   --foreground: #0f172a;
-  --muted: #64748b;
-  --border: #e2f2ea;
-  --border-strong: #cce8dc;
+  --muted: #475569;
+  --border: rgba(255, 255, 255, 0.78);
+  --border-strong: rgba(16, 185, 129, 0.24);
   --tab-rail: color-mix(in srgb, var(--primary) 12%, transparent);
 
-  --surface-overlay: #ffffff;
-  --elevation-popover: 0 10px 15px -3px rgb(5 150 105 / 0.1), 0 4px 6px -4px rgb(5 150 105 / 0.08);
-  --elevation-modal: 0 20px 25px -5px rgb(15 23 42 / 0.12), 0 8px 10px -6px rgb(15 23 42 / 0.08);
+  --surface-overlay: rgba(255, 255, 255, 0.88);
+  --elevation-popover: 0 12px 24px -4px rgb(5 150 105 / 0.12), 0 4px 8px -4px rgb(15 23 42 / 0.06);
+  --elevation-modal: 0 24px 36px -6px rgb(15 23 42 / 0.14), 0 8px 12px -6px rgb(15 23 42 / 0.08);
 
-  --item-hover: #ecfdf5;
+  --item-hover: rgba(236, 253, 245, 0.75);
   --chart-fill: var(--primary);
-  --secondary: #d1fae5;
-  --secondary-hover: #a7f3d0;
-  --tab-selected: #d1fae5;
-  --background-hover: #e6f7ef;
-  --surface-hover: #f8fdfb;
+  --secondary: rgba(209, 250, 229, 0.8);
+  --secondary-hover: rgba(167, 243, 208, 0.9);
+  --tab-selected: rgba(209, 250, 229, 0.85);
+  --background-hover: rgba(230, 247, 239, 0.85);
+  --surface-hover: rgba(255, 255, 255, 0.88);
 
-  --button-hover-surface: #ecfdf5;
-  --button-hover-page: #d1fae5;
+  --button-hover-surface: rgba(236, 253, 245, 0.85);
+  --button-hover-page: rgba(209, 250, 229, 0.85);
   --button-hover: var(--button-hover-page);
 
-  --shadow-segment-track: inset 0 0 0 1px rgb(5 150 105 / 0.12), inset 0 1px 2px rgb(0 0 0 / 0.04);
-  --shadow-segment-thumb: 0 0 0 1px rgb(5 150 105 / 0.12), 0 2px 4px rgb(5 150 105 / 0.12);
+  --shadow-segment-track: inset 0 0 0 1px rgb(5 150 105 / 0.14), inset 0 1px 2px rgb(0 0 0 / 0.04);
+  --shadow-segment-thumb: 0 0 0 1px rgb(255 255 255 / 0.8), 0 2px 6px rgb(5 150 105 / 0.14);
 
-  --ring-focus: rgba(5, 150, 105, 0.2);
+  --ring-focus: rgba(5, 150, 105, 0.22);
   --border-focus: var(--primary);
 
   --danger: #e11d48;
@@ -49,18 +54,18 @@
   --error: #ef4444;
   --error-ring: rgb(239 68 68 / 0.15);
   --error-text: #b91c1c;
-  --error-bg: #fef2f2;
+  --error-bg: rgba(254, 242, 242, 0.85);
   --error-border: #fecaca;
   --error-strong: #991b1b;
 
-  --success-bg: #ecfdf5;
+  --success-bg: rgba(236, 253, 245, 0.85);
   --success: #059669;
-  --warning-bg: #fffbeb;
+  --warning-bg: rgba(255, 251, 235, 0.85);
   --warning: #d97706;
-  --neutral-bg: #f1f5f9;
+  --neutral-bg: rgba(241, 245, 249, 0.8);
   --neutral: #475569;
 
-  --radius: 0.875rem;
+  --radius: 1rem;
 }
 
 @theme inline {
@@ -93,6 +98,29 @@
 
   --shadow-popover: var(--elevation-popover);
   --shadow-modal: var(--elevation-modal);
+}
+
+/* Liquid Glass Surface Utilities (P8 chuẩn UI/UX: có fallback & specular rim) */
+.liquid-glass,
+.bg-surface {
+  background-color: rgba(255, 255, 255, 0.9);
+  box-shadow: var(--glass-shadow);
+}
+
+@supports (backdrop-filter: blur(16px)) {
+  .liquid-glass,
+  .bg-surface {
+    background-color: var(--glass-bg);
+    backdrop-filter: blur(18px) saturate(180%);
+    -webkit-backdrop-filter: blur(18px) saturate(180%);
+  }
+
+  .liquid-glass-floating {
+    background-color: var(--glass-floating);
+    backdrop-filter: blur(24px) saturate(190%);
+    -webkit-backdrop-filter: blur(24px) saturate(190%);
+    box-shadow: var(--glass-shadow);
+  }
 }
 
 .bg-surface *,
@@ -137,6 +165,11 @@
 
 body {
   background-color: var(--background);
+  background-image:
+    radial-gradient(at 12% 15%, rgba(16, 185, 129, 0.18) 0px, transparent 48%),
+    radial-gradient(at 88% 12%, rgba(56, 189, 248, 0.16) 0px, transparent 45%),
+    radial-gradient(at 52% 88%, rgba(251, 191, 36, 0.14) 0px, transparent 50%);
+  background-attachment: fixed;
   color: var(--foreground);
   font-family: var(--app-font);
   -webkit-font-smoothing: antialiased;

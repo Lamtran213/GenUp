@@ -30,6 +30,20 @@ next-env.d.ts
 .DS_Store
 Thumbs.db
 
+# .NET MAUI (genup_maui) Build Artifacts & Mobile Secrets
+**/[Bb]in/
+**/[Oo]bj/
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.keystore
+*.jks
+genup_maui/**/google-services.json
+genup_maui/**/GoogleService-Info.plist
+
+
 
 .vercel
 .env*

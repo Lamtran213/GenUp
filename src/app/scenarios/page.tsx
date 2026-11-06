@@ -167,7 +167,7 @@ export default function ScenariosLibraryPage() {
                 className={`w-full p-4 rounded-2xl border-2 text-left transition-all space-y-2.5 ${
                   isSelected
                     ? theme.activeCard
-                    : "bg-white border-slate-200/90 hover:border-emerald-300 hover:bg-emerald-50/20"
+                    : "liquid-glass border-white/85 hover:border-emerald-300"
                 }`}
               >
                 <div className="flex items-center justify-between gap-2">
@@ -203,9 +203,9 @@ export default function ScenariosLibraryPage() {
           })}
         </div>
 
-        {/* Cột phải: Bàn chơi Tình huống Tương tác (7 cột) */}
+        {/* Cột phải: Bàn chơi Tình huống Tương tác Liquid Glass (7 cột) */}
         {activeScenario && (
-          <div className="lg:col-span-7 bg-white border-2 border-emerald-200/90 rounded-2xl overflow-hidden shadow-sm">
+          <div className="lg:col-span-7 liquid-glass border-2 border-white/85 rounded-2xl overflow-hidden">
             {/* Thanh tiêu đề Thử thách */}
             <div
               className={`bg-gradient-to-r ${activeTheme.banner} text-white px-6 py-4 flex flex-wrap items-center justify-between gap-2`}

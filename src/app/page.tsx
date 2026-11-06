@@ -176,9 +176,9 @@ export default function LandingPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F6FAF8] text-foreground flex flex-col">
-      {/* Header rực rỡ, thân thiện */}
-      <header className="h-16 bg-white/90 backdrop-blur-md border-b border-emerald-100 sticky top-0 z-30 px-4 sm:px-8 flex items-center justify-between">
+    <div className="min-h-screen bg-transparent text-foreground flex flex-col">
+      {/* Header Liquid Glass rực rỡ, thân thiện */}
+      <header className="h-16 liquid-glass-floating border-b border-white/80 sticky top-0 z-30 px-4 sm:px-8 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white flex items-center justify-center font-bold text-sm shadow-sm">
             G
@@ -445,7 +445,7 @@ export default function LandingPage() {
                 <Link
                   key={mod.id}
                   href={`/lessons/${mod.id}`}
-                  className={`group bg-white border border-slate-200 ${style.cardBorder} rounded-2xl p-5 flex flex-col justify-between gap-4 shadow-sm hover:shadow-md transition-all`}
+                  className={`group liquid-glass border-2 border-white/80 ${style.cardBorder} rounded-2xl p-5 flex flex-col justify-between gap-4 hover:shadow-md transition-all`}
                 >
                   <div className="space-y-3">
                     <div className="flex items-center justify-between gap-2">
