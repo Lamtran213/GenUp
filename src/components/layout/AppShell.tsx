@@ -142,16 +142,17 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const activeNav = isParentZone ? parentNav : studentNav;
 
   return (
-    <div className="relative min-h-screen bg-background text-foreground flex flex-col lg:flex-row">
-      {/* Lớp đốm màu Aurora Ambient phía sau để tấm kính Liquid Glass khúc xạ ánh sáng */}
+    <div className="relative min-h-screen text-foreground flex flex-col lg:flex-row">
+      {/* Lớp đốm màu Aurora Ambient rực rỡ phía sau để tấm kính Liquid Glass khúc xạ ánh sáng */}
       <div className="pointer-events-none fixed inset-0 overflow-hidden z-0">
-        <div className="absolute -top-28 -left-24 w-96 h-96 rounded-full bg-emerald-400/20 blur-3xl" />
-        <div className="absolute top-1/4 -right-24 w-96 h-96 rounded-full bg-sky-400/20 blur-3xl" />
-        <div className="absolute -bottom-28 left-1/3 w-96 h-96 rounded-full bg-amber-300/15 blur-3xl" />
+        <div className="absolute -top-16 left-48 w-[420px] h-[420px] rounded-full bg-emerald-400/50 blur-[90px]" />
+        <div className="absolute top-28 right-8 w-[400px] h-[400px] rounded-full bg-sky-400/50 blur-[95px]" />
+        <div className="absolute bottom-8 left-1/3 w-[420px] h-[420px] rounded-full bg-amber-300/45 blur-[95px]" />
+        <div className="absolute top-1/2 left-64 w-[320px] h-[320px] rounded-full bg-violet-400/35 blur-[90px]" />
       </div>
 
-      {/* Sidebar Edu Gamification Liquid Glass trên Desktop */}
-      <aside className="hidden lg:flex lg:w-64 lg:flex-col lg:fixed lg:inset-y-0 liquid-glass-floating border-r border-white/80 z-20">
+      {/* Sidebar Edu Gamification Liquid Glass nổi (Floating Dock) trên Desktop */}
+      <aside className="hidden lg:flex lg:w-64 lg:flex-col lg:fixed lg:inset-y-3 lg:left-3 rounded-3xl liquid-glass-floating z-20 overflow-hidden">
         <div className="h-16 px-5 flex items-center justify-between border-b border-border-strong">
           <Link href="/" className="flex items-center gap-2.5">
             <span className="w-9 h-9 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white flex items-center justify-center font-bold text-sm shadow-sm">
@@ -237,14 +238,14 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         </nav>
 
         {/* Thẻ Player HUD & Bộ đếm 15 phút Free ở chân Sidebar */}
-        <div className="p-3 border-t border-border-strong space-y-2.5 bg-emerald-50/40">
-          <div className="p-2.5 rounded-xl bg-white border border-emerald-200/80 flex items-center justify-between">
+        <div className="p-3 border-t border-white/60 space-y-2.5 bg-white/25">
+          <div className="p-2.5 rounded-xl bg-white/55 backdrop-blur-md border border-white/85 flex items-center justify-between shadow-2xs">
             <div className="flex items-center gap-2 min-w-0">
-              <div className="w-7 h-7 rounded-lg bg-teal-100 text-teal-700 flex items-center justify-center shrink-0">
+              <div className="w-7 h-7 rounded-lg bg-teal-500/20 text-teal-800 flex items-center justify-center shrink-0">
                 <Clock className="w-3.5 h-3.5" />
               </div>
               <div className="min-w-0">
-                <p className="text-[11px] text-slate-500 truncate">
+                <p className="text-[11px] text-slate-600 truncate">
                   {parentSettings.planType === "Free"
                     ? "Năng lượng học Free"
                     : "Gói Premium Đang bật"}
@@ -258,16 +259,16 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             </div>
             <Link
               href="/premium"
-              className="text-xs font-semibold px-2.5 py-1 rounded-lg bg-amber-100 text-amber-900 hover:bg-amber-200 border border-amber-300 shrink-0"
+              className="text-xs font-semibold px-2.5 py-1 rounded-lg bg-amber-300/70 text-amber-950 hover:bg-amber-300 border border-white/80 shrink-0"
             >
               {parentSettings.planType === "Free" ? "Nâng cấp" : "VIP"}
             </Link>
           </div>
 
           {/* Thẻ Nhân vật & Thanh kinh nghiệm Level */}
-          <div className="p-2.5 rounded-xl bg-white border border-emerald-200/80 space-y-2">
+          <div className="p-2.5 rounded-xl bg-white/55 backdrop-blur-md border border-white/85 space-y-2 shadow-2xs">
             <div className="flex items-center gap-2.5">
-              <div className="p-1 rounded-xl bg-emerald-50 border border-emerald-200 shrink-0">
+              <div className="p-1 rounded-xl bg-white/70 border border-white shrink-0">
                 <Avatar2D
                   gender={profile.avatarGender}
                   hairId={profile.equippedHairId}
@@ -285,7 +286,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                     Lv.{currentLevel}
                   </span>
                 </div>
-                <p className="text-[11px] text-slate-500 tabular-nums">
+                <p className="text-[11px] text-slate-600 tabular-nums">
                   {profile.totalXp} XP · {profile.rewardPoints} Điểm
                 </p>
               </div>
@@ -293,11 +294,11 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
             {/* Thanh tiến trình XP lên cấp */}
             <div className="space-y-1">
-              <div className="flex items-center justify-between text-[10px] font-semibold text-emerald-800">
+              <div className="flex items-center justify-between text-[10px] font-semibold text-emerald-900">
                 <span>Tiến độ lên Lv.{currentLevel + 1}</span>
                 <span className="tabular-nums">{xpInCurrentLevel}/100 XP</span>
               </div>
-              <div className="w-full h-2 rounded-full bg-emerald-100 overflow-hidden">
+              <div className="w-full h-2 rounded-full bg-white/70 overflow-hidden">
                 <div
                   className="h-full bg-gradient-to-r from-emerald-500 to-teal-500 rounded-full transition-all duration-300"
                   style={{ width: `${Math.max(8, xpInCurrentLevel)}%` }}
@@ -309,9 +310,9 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       </aside>
 
       {/* Khung chính */}
-      <div className="relative z-10 flex-1 lg:pl-64 flex flex-col min-w-0 pb-16 lg:pb-0">
-        {/* Header Gamification Liquid Glass HUD dính đầu trang */}
-        <header className="h-14 px-4 lg:px-8 liquid-glass-floating border-b border-white/80 sticky top-0 z-10 flex items-center justify-between gap-3">
+      <div className="relative z-10 flex-1 lg:pl-[276px] flex flex-col min-w-0 pb-20 lg:pb-6">
+        {/* Header Gamification Liquid Glass HUD nổi đầu trang */}
+        <header className="h-14 mx-3 sm:mx-6 lg:mx-8 mt-3 px-4 lg:px-6 rounded-2xl liquid-glass-floating sticky top-3 z-20 flex items-center justify-between gap-3">
           <div className="flex items-center gap-2.5 min-w-0">
             <Link href="/" className="lg:hidden flex items-center gap-2">
               <span className="w-7 h-7 rounded-lg bg-emerald-600 text-white flex items-center justify-center font-bold text-xs">

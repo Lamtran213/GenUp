@@ -104,8 +104,8 @@ export default function ScenariosLibraryPage() {
 
   return (
     <div className="space-y-6">
-      {/* Banner Đầu trang kiểu Đấu trường Thử thách (Edu Gamification) */}
-      <div className="rounded-2xl bg-gradient-to-r from-emerald-600 via-teal-600 to-sky-600 text-white p-5 sm:p-6 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      {/* Banner Đầu trang kiểu Đấu trường Thử thách (Edu Gamification Liquid Glass) */}
+      <div className="rounded-3xl liquid-glass-emerald text-white p-5 sm:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="space-y-1.5">
           <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-white/20 text-white text-xs font-semibold">
             <Trophy className="w-3.5 h-3.5 text-amber-300" />
@@ -256,9 +256,9 @@ export default function ScenariosLibraryPage() {
                   const optionLetter = String.fromCharCode(65 + idx); // A, B, C
 
                   let cardStyle =
-                    "bg-white border-2 border-b-4 border-slate-200 hover:border-emerald-400 hover:bg-emerald-50/30 text-slate-800";
+                    "bg-white/55 backdrop-blur-md border-2 border-b-4 border-white/85 hover:border-emerald-400 hover:bg-white/75 text-slate-800";
                   let badgeStyle =
-                    "bg-slate-100 text-slate-700 border border-slate-300";
+                    "bg-white/80 text-slate-700 border border-white";
 
                   if (isChosen) {
                     if (opt.isRecommended) {

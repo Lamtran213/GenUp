@@ -109,7 +109,7 @@ export default function LessonsLibraryPage() {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Tìm bài học, chủ đề..."
-            className="w-full h-10 pl-3.5 pr-9 rounded-xl bg-white border-2 border-emerald-200 text-xs font-medium focus:outline-none focus:border-emerald-500"
+            className="w-full h-10 pl-3.5 pr-9 rounded-xl liquid-glass text-xs font-medium focus:outline-none focus:border-emerald-500"
           />
           <Search className="w-4 h-4 text-emerald-700 absolute right-3 top-3 pointer-events-none" />
         </div>
@@ -127,7 +127,7 @@ export default function LessonsLibraryPage() {
               className={`h-9 px-4 rounded-xl text-xs font-bold shrink-0 transition-all ${
                 active
                   ? "bg-emerald-600 text-white shadow-xs"
-                  : "bg-white text-slate-600 border-2 border-slate-200 hover:border-emerald-300 hover:text-slate-900"
+                  : "liquid-glass text-slate-700 hover:bg-white/70 hover:text-slate-900"
               }`}
             >
               {topic === "ALL" ? "🌟 Tất cả chủ đề" : TOPIC_LABELS[topic]}
@@ -191,7 +191,7 @@ export default function LessonsLibraryPage() {
             return (
               <div
                 key={mod.id}
-                className={`bg-white border-2 border-slate-200 ${theme.borderHover} rounded-2xl overflow-hidden flex flex-col justify-between shadow-2xs hover:shadow-md transition-all`}
+                className={`liquid-glass ${theme.borderHover} rounded-2xl overflow-hidden flex flex-col justify-between hover:shadow-md transition-all`}
               >
                 <div>
                   {/* Banner màu sắc Gamification */}
@@ -237,17 +237,17 @@ export default function LessonsLibraryPage() {
                     <h2 className="text-base font-bold text-slate-900 leading-snug">
                       {mod.title}
                     </h2>
-                    <p className="text-xs text-slate-600 leading-relaxed line-clamp-2">
+                    <p className="text-xs text-slate-700 leading-relaxed line-clamp-2">
                       {mod.summary}
                     </p>
 
                     {/* Thanh tiến độ bước học */}
                     <div className="pt-2 space-y-1">
-                      <div className="flex items-center justify-between text-[11px] font-semibold text-slate-500">
+                      <div className="flex items-center justify-between text-[11px] font-semibold text-slate-600">
                         <span>{mod.steps.length} bước kiến thức & 1 tình huống</span>
                         <span className="tabular-nums">{stepPercent}%</span>
                       </div>
-                      <div className="w-full h-2 rounded-full bg-slate-100 overflow-hidden">
+                      <div className="w-full h-2 rounded-full bg-white/75 overflow-hidden">
                         <div
                           className="h-full bg-emerald-500 rounded-full transition-all duration-300"
                           style={{ width: `${Math.max(6, stepPercent)}%` }}
@@ -257,7 +257,7 @@ export default function LessonsLibraryPage() {
                   </div>
                 </div>
 
-                <div className="px-5 py-3.5 bg-slate-50/70 border-t border-slate-100 flex items-center justify-between">
+                <div className="px-5 py-3.5 bg-white/40 border-t border-white/75 flex items-center justify-between">
                   <span className="text-xs font-bold text-emerald-800 tabular-nums">
                     🎁 Thưởng: +{mod.xpReward} XP · +15 Điểm
                   </span>

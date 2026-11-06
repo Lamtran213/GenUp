@@ -9,63 +9,77 @@
   --primary: #059669;
   --primary-hover: #047857;
   --primary-foreground: #ffffff;
-  --primary-light: #ecfdf5;
+  --primary-light: rgba(209, 250, 229, 0.55);
 
-  --glass-bg: rgba(255, 255, 255, 0.68);
-  --glass-floating: rgba(255, 255, 255, 0.82);
-  --glass-border: rgba(255, 255, 255, 0.82);
-  --glass-shadow: 0 8px 30px -4px rgba(5, 150, 105, 0.08), 0 2px 6px -1px rgba(15, 23, 42, 0.04);
+  /* Tấm kính Liquid Glass trong trẻo (alpha 0.38–0.52) để thấy rõ khúc xạ Aurora phía sau */
+  --glass-bg: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.58) 0%,
+    rgba(255, 255, 255, 0.34) 55%,
+    rgba(240, 253, 250, 0.44) 100%
+  );
+  --glass-floating: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.66) 0%,
+    rgba(255, 255, 255, 0.42) 100%
+  );
+  --glass-border: rgba(255, 255, 255, 0.88);
+  --glass-shadow:
+    0 16px 38px -8px rgba(6, 95, 70, 0.14),
+    0 4px 12px -2px rgba(14, 116, 144, 0.08),
+    inset 0 1.5px 0 0 rgba(255, 255, 255, 0.95),
+    inset 0 -1px 0 0 rgba(255, 255, 255, 0.45);
   /* ========================================================================= */
 
-  --background: #ecf7f2;
-  --surface: rgba(255, 255, 255, 0.72);
+  --background: #dff5ee;
+  --surface: rgba(255, 255, 255, 0.46);
   --foreground: #0f172a;
-  --muted: #475569;
-  --border: rgba(255, 255, 255, 0.78);
-  --border-strong: rgba(16, 185, 129, 0.24);
-  --tab-rail: color-mix(in srgb, var(--primary) 12%, transparent);
+  --muted: #334155;
+  --border: rgba(255, 255, 255, 0.82);
+  --border-strong: rgba(255, 255, 255, 0.92);
+  --tab-rail: color-mix(in srgb, var(--primary) 14%, transparent);
 
-  --surface-overlay: rgba(255, 255, 255, 0.88);
-  --elevation-popover: 0 12px 24px -4px rgb(5 150 105 / 0.12), 0 4px 8px -4px rgb(15 23 42 / 0.06);
-  --elevation-modal: 0 24px 36px -6px rgb(15 23 42 / 0.14), 0 8px 12px -6px rgb(15 23 42 / 0.08);
+  --surface-overlay: rgba(255, 255, 255, 0.72);
+  --elevation-popover: 0 16px 32px -4px rgb(5 150 105 / 0.16), 0 4px 10px -4px rgb(15 23 42 / 0.08);
+  --elevation-modal: 0 24px 42px -6px rgb(15 23 42 / 0.18), 0 8px 16px -6px rgb(15 23 42 / 0.1);
 
-  --item-hover: rgba(236, 253, 245, 0.75);
+  --item-hover: rgba(255, 255, 255, 0.55);
   --chart-fill: var(--primary);
-  --secondary: rgba(209, 250, 229, 0.8);
-  --secondary-hover: rgba(167, 243, 208, 0.9);
-  --tab-selected: rgba(209, 250, 229, 0.85);
-  --background-hover: rgba(230, 247, 239, 0.85);
-  --surface-hover: rgba(255, 255, 255, 0.88);
+  --secondary: rgba(209, 250, 229, 0.65);
+  --secondary-hover: rgba(167, 243, 208, 0.8);
+  --tab-selected: rgba(255, 255, 255, 0.75);
+  --background-hover: rgba(255, 255, 255, 0.55);
+  --surface-hover: rgba(255, 255, 255, 0.68);
 
-  --button-hover-surface: rgba(236, 253, 245, 0.85);
-  --button-hover-page: rgba(209, 250, 229, 0.85);
+  --button-hover-surface: rgba(255, 255, 255, 0.68);
+  --button-hover-page: rgba(255, 255, 255, 0.65);
   --button-hover: var(--button-hover-page);
 
-  --shadow-segment-track: inset 0 0 0 1px rgb(5 150 105 / 0.14), inset 0 1px 2px rgb(0 0 0 / 0.04);
-  --shadow-segment-thumb: 0 0 0 1px rgb(255 255 255 / 0.8), 0 2px 6px rgb(5 150 105 / 0.14);
+  --shadow-segment-track: inset 0 0 0 1px rgb(255 255 255 / 0.65), inset 0 1px 2px rgb(0 0 0 / 0.05);
+  --shadow-segment-thumb: 0 0 0 1px rgb(255 255 255 / 0.9), 0 4px 10px rgb(5 150 105 / 0.16);
 
-  --ring-focus: rgba(5, 150, 105, 0.22);
+  --ring-focus: rgba(5, 150, 105, 0.28);
   --border-focus: var(--primary);
 
   --danger: #e11d48;
-  --danger-bg: rgb(225 29 72 / 0.1);
-  --danger-bg-hover: rgb(225 29 72 / 0.15);
+  --danger-bg: rgb(225 29 72 / 0.12);
+  --danger-bg-hover: rgb(225 29 72 / 0.18);
 
   --error: #ef4444;
   --error-ring: rgb(239 68 68 / 0.15);
   --error-text: #b91c1c;
-  --error-bg: rgba(254, 242, 242, 0.85);
+  --error-bg: rgba(254, 242, 242, 0.75);
   --error-border: #fecaca;
   --error-strong: #991b1b;
 
-  --success-bg: rgba(236, 253, 245, 0.85);
+  --success-bg: rgba(236, 253, 245, 0.72);
   --success: #059669;
-  --warning-bg: rgba(255, 251, 235, 0.85);
+  --warning-bg: rgba(255, 251, 235, 0.72);
   --warning: #d97706;
-  --neutral-bg: rgba(241, 245, 249, 0.8);
+  --neutral-bg: rgba(241, 245, 249, 0.68);
   --neutral: #475569;
 
-  --radius: 1rem;
+  --radius: 1.25rem;
 }
 
 @theme inline {
@@ -100,26 +114,49 @@
   --shadow-modal: var(--elevation-modal);
 }
 
-/* Liquid Glass Surface Utilities (P8 chuẩn UI/UX: có fallback & specular rim) */
+/* ===== HIỆU ỨNG LIQUID GLASS CHUẨN APPLE / EDU MODERN (P8) ===== */
 .liquid-glass,
 .bg-surface {
-  background-color: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.86);
+  border: 1.5px solid rgba(255, 255, 255, 0.88);
   box-shadow: var(--glass-shadow);
+}
+
+.liquid-glass-floating {
+  background: rgba(255, 255, 255, 0.9);
+  border: 1.5px solid rgba(255, 255, 255, 0.92);
+  box-shadow: var(--glass-shadow);
+}
+
+/* Thẻ Hero Liquid Glass có ánh ngọc lục bảo trong suốt */
+.liquid-glass-emerald {
+  background: linear-gradient(
+    135deg,
+    rgba(5, 150, 105, 0.78) 0%,
+    rgba(13, 148, 136, 0.68) 52%,
+    rgba(2, 132, 199, 0.72) 100%
+  );
+  border: 1.5px solid rgba(255, 255, 255, 0.55);
+  box-shadow:
+    0 20px 44px -10px rgba(5, 150, 105, 0.32),
+    inset 0 1.5px 0 0 rgba(255, 255, 255, 0.65),
+    inset 0 -1px 0 0 rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(24px) saturate(190%);
+  -webkit-backdrop-filter: blur(24px) saturate(190%);
 }
 
 @supports (backdrop-filter: blur(16px)) {
   .liquid-glass,
   .bg-surface {
-    background-color: var(--glass-bg);
-    backdrop-filter: blur(18px) saturate(180%);
-    -webkit-backdrop-filter: blur(18px) saturate(180%);
+    background: var(--glass-bg);
+    backdrop-filter: blur(22px) saturate(190%);
+    -webkit-backdrop-filter: blur(22px) saturate(190%);
   }
 
   .liquid-glass-floating {
-    background-color: var(--glass-floating);
-    backdrop-filter: blur(24px) saturate(190%);
-    -webkit-backdrop-filter: blur(24px) saturate(190%);
-    box-shadow: var(--glass-shadow);
+    background: var(--glass-floating);
+    backdrop-filter: blur(28px) saturate(200%);
+    -webkit-backdrop-filter: blur(28px) saturate(200%);
   }
 }
 
@@ -164,11 +201,12 @@
 }
 
 body {
-  background-color: var(--background);
+  background-color: #dff5ee;
   background-image:
-    radial-gradient(at 12% 15%, rgba(16, 185, 129, 0.18) 0px, transparent 48%),
-    radial-gradient(at 88% 12%, rgba(56, 189, 248, 0.16) 0px, transparent 45%),
-    radial-gradient(at 52% 88%, rgba(251, 191, 36, 0.14) 0px, transparent 50%);
+    radial-gradient(at 8% 12%, rgba(16, 185, 129, 0.42) 0px, transparent 46%),
+    radial-gradient(at 88% 14%, rgba(56, 189, 248, 0.42) 0px, transparent 46%),
+    radial-gradient(at 78% 82%, rgba(251, 191, 36, 0.36) 0px, transparent 48%),
+    radial-gradient(at 22% 84%, rgba(167, 139, 250, 0.32) 0px, transparent 48%);
   background-attachment: fixed;
   color: var(--foreground);
   font-family: var(--app-font);

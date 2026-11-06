@@ -2,15 +2,26 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { CheckCircle2, ShoppingBag } from "lucide-react";
+import { CheckCircle2, Lock, ShoppingBag, Sparkles } from "lucide-react";
 import { useGenUp } from "@/context/GenUpContext";
 import { Avatar2D } from "@/components/avatar/Avatar2D";
 import { AVATAR_SHOP_ITEMS } from "@/lib/seed-data";
 
+const ITEM_STICKERS: Record<string, { emoji: string; bg: string }> = {
+  "hair-bob": { emoji: "💇‍♀️", bg: "bg-emerald-100/80 border-emerald-300" },
+  "hair-spiky": { emoji: "⚡", bg: "bg-amber-100/80 border-amber-300" },
+  "hair-curly": { emoji: "🌸", bg: "bg-rose-100/80 border-rose-300" },
+  "outfit-uniform": { emoji: "🎒", bg: "bg-sky-100/80 border-sky-300" },
+  "outfit-hoodie": { emoji: "🛡️", bg: "bg-emerald-100/80 border-emerald-300" },
+  "outfit-jacket": { emoji: "🧥", bg: "bg-indigo-100/80 border-indigo-300" },
+  "acc-none": { emoji: "✨", bg: "bg-slate-100/80 border-slate-300" },
+  "acc-glasses": { emoji: "🤓", bg: "bg-amber-100/80 border-amber-300" },
+  "acc-cap": { emoji: "🧢", bg: "bg-violet-100/80 border-violet-300" },
+};
+
 export default function AvatarStudioPage() {
   const { profile, updateProfile } = useGenUp();
 
-  // US-06 AC2 & AC3: Xem trước nhiều lựa chọn mà chưa ghi đè ngay; vô hiệu hóa nút Lưu khi không có thay đổi
   const [previewGender, setPreviewGender] = useState<"Male" | "Female">(
     profile.avatarGender
   );
@@ -37,76 +48,81 @@ export default function AvatarStudioPage() {
       equippedOutfitId: previewOutfit,
       equippedAccessoryId: previewAccessory,
     });
-    setSavedNotice("Đã lưu ngoại hình nhân vật đại diện mới!");
+    setSavedNotice("Đã lưu trang phục mới!");
   };
 
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
-          <h1 className="text-xl font-semibold tracking-tight">
-            Avatar Studio 2D (US-05, US-06, US-29)
+          <span className="text-xs font-bold uppercase tracking-wider text-emerald-700">
+            Phòng thay đồ 2D
+          </span>
+          <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900">
+            Tùy chỉnh Nhân vật Đại diện
           </h1>
-          <p className="text-xs text-muted">
-            Xem trước kiểu tóc, trang phục và phụ kiện đã sở hữu trước khi nhấn Lưu nhân vật.
-          </p>
         </div>
 
         <Link
           href="/rewards"
-          className="h-9 px-3.5 rounded-xl border border-border-strong bg-surface hover:bg-button-hover text-xs font-medium inline-flex items-center gap-1.5"
+          className="h-10 px-4 rounded-xl liquid-glass hover:bg-white/75 text-xs font-bold text-slate-900 inline-flex items-center gap-1.5"
         >
-          <ShoppingBag className="w-3.5 h-3.5" />
-          <span>Đổi thêm vật phẩm ({profile.rewardPoints} Điểm)</span>
+          <ShoppingBag className="w-4 h-4 text-emerald-700" />
+          <span>Cửa hàng Vật phẩm ({profile.rewardPoints} Điểm)</span>
         </Link>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
-        {/* Khung Xem trước Nhân vật (Preview) */}
-        <div className="bg-surface border border-border rounded-xl p-6 flex flex-col items-center justify-center space-y-4">
-          <Avatar2D
-            gender={previewGender}
-            hairId={previewHair}
-            outfitId={previewOutfit}
-            accessoryId={previewAccessory}
-            size={160}
-          />
+        {/* Khung Xem trước Nhân vật Liquid Glass */}
+        <div className="liquid-glass rounded-3xl p-6 flex flex-col items-center justify-center space-y-4">
+          <div className="p-4 rounded-3xl bg-white/75 border-2 border-white shadow-sm">
+            <Avatar2D
+              gender={previewGender}
+              hairId={previewHair}
+              outfitId={previewOutfit}
+              accessoryId={previewAccessory}
+              size={156}
+            />
+          </div>
+
           <div className="text-center space-y-0.5">
-            <p className="text-base font-semibold">{profile.nickname}</p>
-            <p className="text-xs text-muted">
-              {hasChanges ? "Đang xem trước thay đổi (Chưa lưu)" : "Ngoại hình đang sử dụng"}
+            <p className="text-base font-extrabold text-slate-900">
+              {profile.nickname}
+            </p>
+            <p className="text-xs font-medium text-slate-600">
+              {hasChanges ? "✨ Đang thử đồ mới" : "✓ Trang phục đang mặc"}
             </p>
           </div>
 
           {savedNotice && (
-            <p className="text-xs text-emerald-700 bg-emerald-50 px-3 py-1.5 rounded-lg inline-flex items-center gap-1">
+            <p className="text-xs font-bold text-emerald-800 bg-emerald-100/80 border border-white px-3 py-1.5 rounded-xl inline-flex items-center gap-1">
               <CheckCircle2 className="w-3.5 h-3.5" />
               <span>{savedNotice}</span>
             </p>
           )}
 
-          {/* US-06 AC3: Nút Lưu không khả dụng khi chưa có thay đổi */}
           <button
             type="button"
             onClick={handleSave}
             disabled={!hasChanges}
-            className={`w-full h-10 rounded-xl text-xs font-medium transition-colors ${
+            className={`w-full h-10 rounded-xl text-xs font-bold inline-flex items-center justify-center gap-1.5 transition-all ${
               hasChanges
-                ? "bg-primary hover:bg-primary-hover text-primary-foreground"
-                : "bg-secondary text-muted cursor-not-allowed"
+                ? "bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs"
+                : "bg-white/50 text-slate-400 border border-white/70 cursor-not-allowed"
             }`}
           >
-            {hasChanges ? "Lưu nhân vật" : "Chưa có thay đổi để lưu"}
+            <Sparkles className="w-3.5 h-3.5" />
+            <span>{hasChanges ? "Lưu trang phục ngay" : "Đang mặc bộ này"}</span>
           </button>
         </div>
 
-        {/* Bảng chọn các lớp SVG (Giới tính, Kiểu tóc, Trang phục, Phụ kiện) */}
-        <div className="lg:col-span-2 bg-surface border border-border rounded-xl p-6 space-y-5">
+        {/* Bảng chọn vật phẩm có Sticker */}
+        <div className="lg:col-span-2 liquid-glass rounded-3xl p-6 space-y-5">
           <div className="space-y-2">
-            <label className="text-xs font-semibold block">
-              1. Giới tính nhân vật (US-05)
+            <label className="text-xs font-extrabold text-slate-800 block">
+              1. Chọn Nhân vật
             </label>
-            <div className="grid grid-cols-2 gap-2.5">
+            <div className="grid grid-cols-2 gap-3">
               {(["Female", "Male"] as const).map((g) => (
                 <button
                   key={g}
@@ -115,13 +131,14 @@ export default function AvatarStudioPage() {
                     setPreviewGender(g);
                     setSavedNotice(null);
                   }}
-                  className={`h-10 rounded-xl border text-xs font-medium ${
+                  className={`h-11 rounded-2xl border text-xs font-bold flex items-center justify-center gap-2 transition-all ${
                     previewGender === g
-                      ? "bg-primary text-primary-foreground border-primary"
-                      : "bg-surface text-foreground border-border-strong hover:bg-button-hover"
+                      ? "bg-emerald-600 text-white border-emerald-600 shadow-xs"
+                      : "bg-white/60 text-slate-800 border-white hover:bg-white/80"
                   }`}
                 >
-                  {g === "Female" ? "Nhân vật Nữ" : "Nhân vật Nam"}
+                  <span className="text-base">{g === "Female" ? "👧" : "👦"}</span>
+                  <span>{g === "Female" ? "Nhân vật Nữ" : "Nhân vật Nam"}</span>
                 </button>
               ))}
             </div>
@@ -138,18 +155,23 @@ export default function AvatarStudioPage() {
 
             return (
               <div key={category} className="space-y-2">
-                <label className="text-xs font-semibold block">
+                <label className="text-xs font-extrabold text-slate-800 block">
                   {idx + 2}.{" "}
                   {category === "hair"
-                    ? "Kiểu tóc (US-06)"
+                    ? "Kiểu tóc"
                     : category === "outfit"
-                    ? "Trang phục (US-29)"
-                    : "Phụ kiện (US-29)"}
+                    ? "Trang phục"
+                    : "Phụ kiện"}
                 </label>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                   {items.map((item) => {
                     const owned = profile.ownedItemIds.includes(item.id);
                     const selected = currentVal === item.id;
+                    const sticker = ITEM_STICKERS[item.id] || {
+                      emoji: "🎁",
+                      bg: "bg-emerald-100/80 border-emerald-300",
+                    };
+
                     return (
                       <button
                         key={item.id}
@@ -162,20 +184,38 @@ export default function AvatarStudioPage() {
                           if (category === "accessory" && owned)
                             setPreviewAccessory(item.id);
                         }}
-                        className={`p-3 rounded-xl border text-left transition-colors ${
+                        className={`p-3 rounded-2xl border flex items-center gap-3 text-left transition-all ${
                           selected
-                            ? "bg-secondary border-primary"
+                            ? "bg-emerald-50/90 border-2 border-emerald-500 shadow-xs"
                             : owned || category === "hair"
-                            ? "bg-surface border-border-strong hover:bg-button-hover"
-                            : "bg-background border-border opacity-55 cursor-not-allowed"
+                            ? "bg-white/60 border-white hover:bg-white/85"
+                            : "bg-white/30 border-white/60 opacity-55 cursor-not-allowed"
                         }`}
                       >
-                        <p className="text-xs font-medium truncate">{item.name}</p>
-                        <p className="text-[11px] text-muted mt-0.5">
-                          {owned || category === "hair"
-                            ? "Có thể trang bị"
-                            : `Cần mở khóa (${item.cost} Điểm)`}
-                        </p>
+                        <div
+                          className={`w-11 h-11 rounded-xl border flex items-center justify-center text-2xl shrink-0 ${sticker.bg}`}
+                        >
+                          {sticker.emoji}
+                        </div>
+                        <div className="min-w-0">
+                          <p className="text-xs font-extrabold text-slate-900 truncate">
+                            {item.name}
+                          </p>
+                          <p className="text-[11px] font-semibold text-slate-600 mt-0.5 flex items-center gap-1">
+                            {owned || category === "hair" ? (
+                              selected ? (
+                                <span className="text-emerald-700 font-bold">✓ Đang thử</span>
+                              ) : (
+                                <span>Sẵn sàng</span>
+                              )
+                            ) : (
+                              <>
+                                <Lock className="w-3 h-3" />
+                                <span>{item.cost} Điểm</span>
+                              </>
+                            )}
+                          </p>
+                        </div>
                       </button>
                     );
                   })}
@@ -188,4 +228,3 @@ export default function AvatarStudioPage() {
     </div>
   );
 }
-

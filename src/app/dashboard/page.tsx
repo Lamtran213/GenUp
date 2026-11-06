@@ -41,10 +41,10 @@ export default function StudentDashboardPage() {
 
   return (
     <div className="space-y-6">
-      {/* Đầu trang: Thẻ Nhân vật & Cấp độ (Player Hero Card) */}
-      <section className="rounded-2xl bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-700 text-white p-5 sm:p-6 shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-5">
+      {/* Đầu trang: Thẻ Nhân vật & Cấp độ (Player Hero Card Liquid Glass) */}
+      <section className="rounded-3xl liquid-glass-emerald text-white p-5 sm:p-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-5">
         <div className="flex items-center gap-4">
-          <div className="p-2 rounded-2xl bg-white/95 shadow-md border-2 border-emerald-300 shrink-0">
+          <div className="p-2 rounded-2xl bg-white/85 backdrop-blur-md shadow-md border-2 border-white shrink-0">
             <Avatar2D
               gender={profile.avatarGender}
               hairId={profile.equippedHairId}
@@ -58,14 +58,14 @@ export default function StudentDashboardPage() {
               <span className="px-2.5 py-0.5 rounded-full bg-amber-400 text-slate-950 text-xs font-extrabold">
                 CẤP ĐỘ {currentLevel}
               </span>
-              <span className="px-2.5 py-0.5 rounded-full bg-white/20 text-white text-xs font-semibold">
+              <span className="px-2.5 py-0.5 rounded-full bg-white/25 backdrop-blur-sm border border-white/40 text-white text-xs font-semibold">
                 Lớp {profile.grade}
               </span>
             </div>
             <h1 className="text-xl sm:text-2xl font-bold tracking-tight">
               Chào nhà thám hiểm {profile.nickname}!
             </h1>
-            <p className="text-xs text-white/90">
+            <p className="text-xs text-white/95">
               Chủ đề yêu thích:{" "}
               {profile.interestedTopics.length > 0
                 ? profile.interestedTopics.map((t) => TOPIC_LABELS[t]).join(" · ")
@@ -74,11 +74,11 @@ export default function StudentDashboardPage() {
 
             {/* Thanh tiến trình Level ngay trên Banner */}
             <div className="pt-1 max-w-xs space-y-1">
-              <div className="flex items-center justify-between text-[11px] font-semibold text-emerald-100">
+              <div className="flex items-center justify-between text-[11px] font-semibold text-emerald-50">
                 <span>Kinh nghiệm cấp {currentLevel}</span>
                 <span>{xpInLevel} / 100 XP</span>
               </div>
-              <div className="w-full h-2.5 rounded-full bg-black/25 overflow-hidden">
+              <div className="w-full h-2.5 rounded-full bg-black/25 overflow-hidden border border-white/25">
                 <div
                   className="h-full bg-amber-400 rounded-full transition-all duration-300"
                   style={{ width: `${Math.max(10, xpInLevel)}%` }}
@@ -91,14 +91,14 @@ export default function StudentDashboardPage() {
         <div className="flex flex-wrap items-center gap-2.5 w-full md:w-auto">
           <Link
             href="/avatar"
-            className="h-10 px-4 rounded-xl bg-white/15 hover:bg-white/25 border border-white/30 text-white text-xs font-semibold inline-flex items-center justify-center gap-1.5"
+            className="h-10 px-4 rounded-xl bg-white/20 hover:bg-white/30 backdrop-blur-md border border-white/45 text-white text-xs font-semibold inline-flex items-center justify-center gap-1.5"
           >
             <Sparkles className="w-4 h-4 text-amber-300" />
             <span>Đổi trang phục 2D</span>
           </Link>
           <Link
             href="/lessons"
-            className="h-10 px-4 rounded-xl bg-white text-emerald-950 hover:bg-emerald-50 text-xs font-bold inline-flex items-center justify-center gap-1.5 shadow-sm flex-1 md:flex-initial"
+            className="h-10 px-4 rounded-xl bg-white/90 hover:bg-white text-emerald-950 text-xs font-bold inline-flex items-center justify-center gap-1.5 shadow-sm flex-1 md:flex-initial"
           >
             <span>Vào Bản đồ Bài học</span>
             <ArrowRight className="w-4 h-4" />
@@ -253,13 +253,13 @@ export default function StudentDashboardPage() {
         </div>
 
         {/* Bảng Nhiệm vụ hằng ngày (Daily Quests - US-24) */}
-        <div className="bg-white border-2 border-amber-200 rounded-2xl p-5 space-y-3.5 shadow-2xs">
+        <div className="liquid-glass rounded-2xl p-5 space-y-3.5">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-1.5">
               <Award className="w-4 h-4 text-amber-600" />
               <h2 className="text-sm font-bold text-slate-900">Nhiệm vụ Hôm nay</h2>
             </div>
-            <span className="px-2 py-0.5 rounded-full bg-amber-100 text-amber-900 text-xs font-bold tabular-nums">
+            <span className="px-2 py-0.5 rounded-full bg-amber-300/60 border border-white/80 text-amber-950 text-xs font-bold tabular-nums">
               {completedMissionIdsToday.length}/{DAILY_MISSIONS.length}
             </span>
           </div>
@@ -270,10 +270,10 @@ export default function StudentDashboardPage() {
               return (
                 <div
                   key={mission.id}
-                  className={`p-3 rounded-xl border flex items-start justify-between gap-2.5 ${
+                  className={`p-3 rounded-xl border backdrop-blur-md flex items-start justify-between gap-2.5 ${
                     done
-                      ? "bg-emerald-50/80 border-emerald-200"
-                      : "bg-amber-50/40 border-amber-200/80"
+                      ? "bg-emerald-100/55 border-white/85"
+                      : "bg-white/50 border-white/85"
                   }`}
                 >
                   <div className="flex items-start gap-2 min-w-0">
@@ -290,7 +290,7 @@ export default function StudentDashboardPage() {
                       >
                         {mission.title}
                       </p>
-                      <p className="text-[11px] font-bold text-amber-700 tabular-nums mt-0.5">
+                      <p className="text-[11px] font-bold text-amber-800 tabular-nums mt-0.5">
                         +{mission.xpReward} XP · +{mission.rewardPoints} Điểm
                       </p>
                     </div>
@@ -299,7 +299,7 @@ export default function StudentDashboardPage() {
                     className={`px-2 py-0.5 rounded-full text-[10px] font-bold shrink-0 ${
                       done
                         ? "bg-emerald-600 text-white"
-                        : "bg-amber-200/80 text-amber-950"
+                        : "bg-amber-300/75 text-amber-950"
                     }`}
                   >
                     {done ? "Đã nhận" : "Đang mở"}
@@ -315,7 +315,7 @@ export default function StudentDashboardPage() {
       <section className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <Link
           href="/scenarios"
-          className="bg-gradient-to-r from-amber-50 to-orange-50 border-2 border-amber-200 hover:border-amber-400 rounded-2xl p-4 flex items-center justify-between transition-all"
+          className="liquid-glass hover:bg-white/65 rounded-2xl p-4 flex items-center justify-between transition-all"
         >
           <div className="flex items-center gap-3.5">
             <div className="w-11 h-11 rounded-2xl bg-amber-500 text-white flex items-center justify-center shadow-xs shrink-0">
@@ -325,7 +325,7 @@ export default function StudentDashboardPage() {
               <p className="text-sm font-bold text-slate-900">
                 Đấu trường Tình huống Thực tế
               </p>
-              <p className="text-xs text-slate-600">
+              <p className="text-xs text-slate-700">
                 Luyện phản xạ từ chối, xử lý tin nhắn lạ & nhận +30 XP mỗi tình huống
               </p>
             </div>
@@ -335,7 +335,7 @@ export default function StudentDashboardPage() {
 
         <Link
           href="/chat"
-          className="bg-gradient-to-r from-sky-50 to-indigo-50 border-2 border-sky-200 hover:border-sky-400 rounded-2xl p-4 flex items-center justify-between transition-all"
+          className="liquid-glass hover:bg-white/65 rounded-2xl p-4 flex items-center justify-between transition-all"
         >
           <div className="flex items-center gap-3.5">
             <div className="w-11 h-11 rounded-2xl bg-sky-600 text-white flex items-center justify-center shadow-xs shrink-0">
@@ -345,7 +345,7 @@ export default function StudentDashboardPage() {
               <p className="text-sm font-bold text-slate-900">
                 Hỏi đáp Kín đáo cùng Trợ lý Gendio
               </p>
-              <p className="text-xs text-slate-600">
+              <p className="text-xs text-slate-700">
                 Giải đáp thắc mắc tuổi dậy thì (100% riêng tư, không hiển thị cho phụ huynh)
               </p>
             </div>
