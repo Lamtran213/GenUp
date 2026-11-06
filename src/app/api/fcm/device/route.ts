@@ -100,8 +100,7 @@ export async function POST(req: NextRequest) {
             updated_at: new Date().toISOString(),
           },
           { onConflict: "fcm_token" }
-        )
-        .catch(() => null);
+        );
     }
 
     // 3. Nếu yêu cầu gửi thông báo chào mừng ngay sau khi đăng ký
@@ -130,3 +129,4 @@ export async function POST(req: NextRequest) {
     );
   }
 }
+
