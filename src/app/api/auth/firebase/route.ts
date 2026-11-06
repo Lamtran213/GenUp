@@ -1,9 +1,10 @@
+import crypto from "crypto";
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { verifyFirebaseIdToken } from "@/lib/firebase/admin";
 import { getMongoDatabase } from "@/lib/mongodb/client";
 
-function getSupabaseServerAdminOrAnon() {
+function getSupabaseServerClient() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const key =
     process.env.SUPABASE_SERVICE_ROLE_KEY ||
@@ -12,6 +13,16 @@ function getSupabaseServerAdminOrAnon() {
   return createClient(url, key, {
     auth: { persistSession: false, autoRefreshToken: false },
   });
+}
+
+function deriveSupabasePassword(firebaseUid: string): string {
+  const secret = process.env.CRON_SECRET || "genup_default_bridge_secret";
+  const hash = crypto
+    .createHmac("sha256", secret)
+    .update(firebaseUid)
+    .digest("hex")
+    .slice(0, 24);
+  return `Gu!${hash}9A`;
 }
 
 export async function POST(req: NextRequest) {
@@ -49,13 +60,44 @@ export async function POST(req: NextRequest) {
       lastLoginAt: new Date().toISOString(),
     };
 
-    // 1. Lưu / cập nhật thông tin tài khoản Google & Hồ sơ Học sinh vào Supabase PostgreSQL
+    // 1. Đồng bộ tài khoản Google vào Supabase Auth (auth.users) + bảng public.user_accounts & public.student_profiles
     let supabaseSynced = false;
-    let supabaseDetails: unknown = null;
-    const supabase = getSupabaseServerAdminOrAnon();
+    let supabaseAuthUserId: string | null = null;
+    const supabase = getSupabaseServerClient();
 
     if (supabase) {
-      const { data: rpcData, error: rpcError } = await supabase.rpc(
+      const bridgePassword = deriveSupabasePassword(decoded.uid);
+
+      // 1a. Đăng nhập hoặc tạo user trong Supabase Authentication (auth.users)
+      const signInRes = await supabase.auth.signInWithPassword({
+        email,
+        password: bridgePassword,
+      });
+
+      if (signInRes.data?.user) {
+        supabaseAuthUserId = signInRes.data.user.id;
+        supabaseSynced = true;
+      } else {
+        const signUpRes = await supabase.auth.signUp({
+          email,
+          password: bridgePassword,
+          options: {
+            data: {
+              full_name: fullName,
+              avatar_url: decoded.picture || null,
+              firebase_uid: decoded.uid,
+              provider: "google.com",
+            },
+          },
+        });
+        if (signUpRes.data?.user) {
+          supabaseAuthUserId = signUpRes.data.user.id;
+          supabaseSynced = true;
+        }
+      }
+
+      // 1b. Gọi hàm RPC đồng bộ vào bảng public.user_accounts & public.student_profiles
+      const { error: rpcError } = await supabase.rpc(
         "sync_firebase_google_user",
         {
           p_firebase_uid: decoded.uid,
@@ -69,9 +111,17 @@ export async function POST(req: NextRequest) {
 
       if (!rpcError) {
         supabaseSynced = true;
-        supabaseDetails = rpcData;
-      } else {
-        supabaseDetails = rpcError.message;
+      } else if (supabaseAuthUserId) {
+        // Fallback nếu chưa chạy RPC mới: ghi trực tiếp bằng phiên authenticated của Supabase
+        await supabase.from("user_accounts").upsert(
+          {
+            id: supabaseAuthUserId,
+            email,
+            full_name: fullName,
+            role: "Parent",
+          },
+          { onConflict: "id" }
+        );
       }
     }
 
@@ -81,7 +131,11 @@ export async function POST(req: NextRequest) {
       await db.collection("users").updateOne(
         { uid: decoded.uid },
         {
-          $set: { ...userRecord, supabaseSynced },
+          $set: {
+            ...userRecord,
+            supabaseAuthUserId,
+            supabaseSynced,
+          },
           $setOnInsert: { createdAt: new Date().toISOString() },
         },
         { upsert: true }
@@ -91,8 +145,8 @@ export async function POST(req: NextRequest) {
     const response = NextResponse.json({
       ok: true,
       user: userRecord,
+      supabaseAuthUserId,
       supabaseSynced,
-      supabaseDetails,
     });
 
     response.cookies.set("genup_firebase_uid", decoded.uid, {

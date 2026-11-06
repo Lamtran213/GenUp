@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { LogOut } from "lucide-react";
 import { useGenUp } from "@/context/GenUpContext";
 import {
@@ -10,19 +11,23 @@ import {
 } from "@/lib/firebase/client";
 
 export function GoogleSignInButton({ compact = false }: { compact?: boolean }) {
+  const router = useRouter();
   const { profile, updateProfile } = useGenUp();
   const [user, setUser] = useState<FirebaseAuthUser | null>(null);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    try {
-      const raw = localStorage.getItem("genup_firebase_user");
-      if (raw) {
-        setUser(JSON.parse(raw) as FirebaseAuthUser);
+    const syncUserFromStorage = () => {
+      try {
+        const raw = localStorage.getItem("genup_firebase_user");
+        setUser(raw ? (JSON.parse(raw) as FirebaseAuthUser) : null);
+      } catch {
+        setUser(null);
       }
-    } catch {
-      // ignore
-    }
+    };
+    syncUserFromStorage();
+    window.addEventListener("genup-auth-change", syncUserFromStorage);
+    return () => window.removeEventListener("genup-auth-change", syncUserFromStorage);
   }, []);
 
   const handleLogin = async () => {
@@ -34,6 +39,8 @@ export function GoogleSignInButton({ compact = false }: { compact?: boolean }) {
       if (res.user.displayName && profile.nickname === "Minh Anh") {
         updateProfile({ nickname: res.user.displayName });
       }
+      window.dispatchEvent(new Event("genup-auth-change"));
+      router.push("/dashboard");
     } else if (res.error) {
       alert(res.error);
     }
@@ -41,7 +48,14 @@ export function GoogleSignInButton({ compact = false }: { compact?: boolean }) {
 
   const handleLogout = async () => {
     await signOutFirebase();
+    try {
+      localStorage.removeItem("genup_supabase_logged_in");
+    } catch {
+      // ignore
+    }
     setUser(null);
+    window.dispatchEvent(new Event("genup-auth-change"));
+    router.replace("/login");
   };
 
   if (user) {
@@ -54,9 +68,10 @@ export function GoogleSignInButton({ compact = false }: { compact?: boolean }) {
           type="button"
           onClick={handleLogout}
           title="Đăng xuất Google"
-          className="text-muted hover:text-foreground inline-flex items-center"
+          className="text-muted hover:text-foreground inline-flex items-center gap-1"
         >
           <LogOut className="w-3.5 h-3.5" />
+          <span className="hidden sm:inline">Thoát</span>
         </button>
       </div>
     );
@@ -93,4 +108,3 @@ export function GoogleSignInButton({ compact = false }: { compact?: boolean }) {
     </button>
   );
 }
-

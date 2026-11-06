@@ -52,19 +52,26 @@ export default function LoginPage() {
     if (res.user.displayName && profile.nickname === "Minh Anh") {
       updateProfile({ nickname: res.user.displayName });
     }
+    window.dispatchEvent(new Event("genup-auth-change"));
     setAuthStatus(
-      `Đăng nhập Google thành công (${res.user.email || res.user.displayName})! Đang chuyển vào góc học tập...`
+      `Đăng nhập Google thành công (${res.user.email || res.user.displayName})! Đã đồng bộ tài khoản lên Supabase & MongoDB.`
     );
     setTimeout(() => {
       router.push("/dashboard");
-    }, 900);
+    }, 600);
   };
 
   const handleGoogleSignOut = async () => {
     await signOutFirebase();
+    try {
+      localStorage.removeItem("genup_supabase_logged_in");
+    } catch {
+      // ignore
+    }
     setFirebaseUser(null);
+    window.dispatchEvent(new Event("genup-auth-change"));
     setIsSuccess(true);
-    setAuthStatus("Đã đăng xuất tài khoản Google.");
+    setAuthStatus("Đã đăng xuất tài khoản.");
   };
 
   const handleSupabaseLogin = async (e: React.FormEvent) => {
@@ -77,21 +84,35 @@ export default function LoginPage() {
 
     const supabase = getSupabaseBrowserClient();
     if (!supabase) {
-      setIsSuccess(true);
-      setAuthStatus("Đã xác thực phiên gia đình (Chế độ Unified Profile). Đang chuyển hướng...");
-      router.push("/dashboard");
+      setAuthStatus("Chưa cấu hình kết nối Supabase.");
       return;
     }
 
-    const { error } = await supabase.auth.signInWithPassword({
+    const { data, error } = await supabase.auth.signInWithPassword({
       email: email.trim(),
       password,
     });
 
-    if (error) {
-      setAuthStatus(`Thông báo xác thực: ${error.message}`);
+    if (error || !data.user) {
+      setAuthStatus(`Thông báo xác thực: ${error?.message || "Sai thông tin đăng nhập"}`);
     } else {
+      const userObj: FirebaseAuthUser = {
+        uid: data.user.id,
+        email: data.user.email || email.trim(),
+        displayName:
+          (data.user.user_metadata?.full_name as string) ||
+          email.trim().split("@")[0],
+        photoURL: null,
+      };
+      try {
+        localStorage.setItem("genup_firebase_user", JSON.stringify(userObj));
+        localStorage.setItem("genup_supabase_logged_in", "1");
+      } catch {
+        // ignore
+      }
+      setFirebaseUser(userObj);
       setIsSuccess(true);
+      window.dispatchEvent(new Event("genup-auth-change"));
       router.push("/dashboard");
     }
   };
@@ -107,85 +128,90 @@ export default function LoginPage() {
             <span className="font-semibold text-sm">GenUp</span>
           </Link>
           <h1 className="text-xl font-semibold tracking-tight pt-1">
-            Truy cập & Chọn khu vực sử dụng
+            {firebaseUser
+              ? "Chọn khu vực sử dụng"
+              : "Đăng nhập để truy cập GenUp"}
           </h1>
           <p className="text-xs text-muted">
-            Theo Mục 4.2 SRS: Học sinh và Phụ huynh có thể chuyển đổi trực tiếp trên cùng hồ sơ gia đình.
+            {firebaseUser
+              ? `Xin chào ${firebaseUser.displayName || firebaseUser.email}! Hãy chọn khu vực Học sinh hoặc Phụ huynh.`
+              : "Bạn cần đăng nhập bằng tài khoản Google (Firebase) hoặc Email gia đình trước khi vào khu vực học tập."}
           </p>
-        </div>
-
-        {/* Lựa chọn nhanh khu vực theo đúng luồng Mục 4.2 SRS */}
-        <div className="grid grid-cols-1 gap-2.5">
-          <button
-            type="button"
-            onClick={() => router.push("/dashboard")}
-            className="w-full p-3.5 rounded-xl border border-border-strong bg-surface hover:bg-button-hover text-left flex items-center justify-between"
-          >
-            <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-lg bg-background flex items-center justify-center">
-                <User className="w-4 h-4 text-foreground" />
-              </div>
-              <div>
-                <p className="text-sm font-medium">
-                  Vào Khu vực Học sinh ({profile.nickname} · Lớp {profile.grade})
-                </p>
-                <p className="text-xs text-muted">
-                  Học bài theo bước, giải tình huống, nhận XP & đổi đồ Avatar
-                </p>
-              </div>
-            </div>
-            <ArrowRight className="w-4 h-4 text-muted shrink-0" />
-          </button>
-
-          <button
-            type="button"
-            onClick={() => router.push("/parent")}
-            className="w-full p-3.5 rounded-xl border border-border-strong bg-surface hover:bg-button-hover text-left flex items-center justify-between"
-          >
-            <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-lg bg-background flex items-center justify-center">
-                <Users className="w-4 h-4 text-foreground" />
-              </div>
-              <div>
-                <p className="text-sm font-medium">Vào Góc Phụ Huynh</p>
-                <p className="text-xs text-muted">
-                  Xem báo cáo tổng hợp 7/14/30 ngày, Hộp thư & cấu hình Email
-                </p>
-              </div>
-            </div>
-            <ArrowRight className="w-4 h-4 text-muted shrink-0" />
-          </button>
         </div>
 
         {/* Đăng nhập Google qua Firebase 3rd-party Auth */}
-        <div className="border-t border-border-strong pt-4 space-y-3">
-          <p className="text-xs font-medium text-muted">
-            Liên kết đăng nhập nhanh (Google qua Firebase Auth)
-          </p>
-
+        <div className="space-y-3">
           {firebaseUser ? (
-            <div className="p-3 rounded-xl border border-border-strong bg-background flex items-center justify-between gap-3">
-              <div className="min-w-0">
-                <p className="text-xs font-medium text-foreground truncate">
-                  {firebaseUser.displayName || "Tài khoản Google"}
-                </p>
-                <p className="text-xs text-muted truncate">{firebaseUser.email}</p>
+            <>
+              <div className="p-3 rounded-xl border border-border-strong bg-background flex items-center justify-between gap-3">
+                <div className="min-w-0">
+                  <p className="text-xs font-medium text-foreground truncate">
+                    {firebaseUser.displayName || "Tài khoản đã xác thực"}
+                  </p>
+                  <p className="text-xs text-muted truncate">
+                    {firebaseUser.email}
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={handleGoogleSignOut}
+                  className="h-8 px-2.5 rounded-lg border border-border-strong bg-surface hover:bg-button-hover text-xs font-medium inline-flex items-center gap-1.5 shrink-0"
+                >
+                  <LogOut className="w-3.5 h-3.5" />
+                  Đăng xuất
+                </button>
               </div>
-              <button
-                type="button"
-                onClick={handleGoogleSignOut}
-                className="h-8 px-2.5 rounded-lg border border-border-strong bg-surface hover:bg-button-hover text-xs font-medium inline-flex items-center gap-1.5 shrink-0"
-              >
-                <LogOut className="w-3.5 h-3.5" />
-                Đăng xuất
-              </button>
-            </div>
+
+              {/* Chỉ hiển thị nút vào Khu vực Học sinh / Phụ huynh SAU KHI đã đăng nhập */}
+              <div className="grid grid-cols-1 gap-2.5 pt-2">
+                <button
+                  type="button"
+                  onClick={() => router.push("/dashboard")}
+                  className="w-full p-3.5 rounded-xl border border-border-strong bg-surface hover:bg-button-hover text-left flex items-center justify-between"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="w-9 h-9 rounded-lg bg-background flex items-center justify-center">
+                      <User className="w-4 h-4 text-foreground" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium">
+                        Vào Khu vực Học sinh ({profile.nickname} · Lớp{" "}
+                        {profile.grade})
+                      </p>
+                      <p className="text-xs text-muted">
+                        Học bài theo bước, giải tình huống, nhận XP & đổi đồ Avatar
+                      </p>
+                    </div>
+                  </div>
+                  <ArrowRight className="w-4 h-4 text-muted shrink-0" />
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => router.push("/parent")}
+                  className="w-full p-3.5 rounded-xl border border-border-strong bg-surface hover:bg-button-hover text-left flex items-center justify-between"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="w-9 h-9 rounded-lg bg-background flex items-center justify-center">
+                      <Users className="w-4 h-4 text-foreground" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium">Vào Góc Phụ Huynh</p>
+                      <p className="text-xs text-muted">
+                        Xem báo cáo tổng hợp 7/14/30 ngày, Hộp thư & cấu hình Email
+                      </p>
+                    </div>
+                  </div>
+                  <ArrowRight className="w-4 h-4 text-muted shrink-0" />
+                </button>
+              </div>
+            </>
           ) : (
             <button
               type="button"
               onClick={handleGoogleFirebaseLogin}
               disabled={googleLoading}
-              className="w-full h-10 px-4 rounded-xl border border-border-strong bg-surface hover:bg-button-hover text-foreground text-sm font-medium flex items-center justify-center gap-2.5 disabled:opacity-50"
+              className="w-full h-11 px-4 rounded-xl border border-border-strong bg-surface hover:bg-button-hover text-foreground text-sm font-semibold flex items-center justify-center gap-2.5 disabled:opacity-50"
             >
               <svg className="w-4 h-4" viewBox="0 0 24 24" aria-hidden="true">
                 <path
@@ -207,88 +233,107 @@ export default function LoginPage() {
               </svg>
               <span>
                 {googleLoading
-                  ? "Đang kết nối Google (Firebase)..."
-                  : "Tiếp tục bằng Google"}
+                  ? "Đang xác thực với Google & lưu vào Supabase..."
+                  : "Tiếp tục bằng Google (Khuyên dùng)"}
               </span>
             </button>
           )}
         </div>
 
-        <div className="border-t border-border-strong pt-4">
-          <p className="text-xs font-medium text-muted mb-3">
-            Hoặc đăng nhập bằng Email & Mật khẩu (US-45)
-          </p>
-          <form onSubmit={handleSupabaseLogin} className="space-y-3">
-            <div className="space-y-1">
-              <label className="text-xs font-medium text-foreground block">
-                Email phụ huynh
-              </label>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="phuhuynh@genup.vn"
-                className="w-full h-10 px-3 rounded-xl bg-surface border border-border-strong text-sm focus:outline-none focus:border-focus focus:ring-2 focus:ring-focus"
-              />
-            </div>
-
-            <div className="space-y-1">
-              <div className="flex items-center justify-between">
-                <label className="text-xs font-medium text-foreground">
-                  Mật khẩu
+        {!firebaseUser && (
+          <div className="border-t border-border-strong pt-4">
+            <p className="text-xs font-medium text-muted mb-3">
+              Hoặc đăng nhập bằng Email & Mật khẩu (Supabase Auth)
+            </p>
+            <form onSubmit={handleSupabaseLogin} className="space-y-3">
+              <div className="space-y-1">
+                <label className="text-xs font-medium text-foreground block">
+                  Email phụ huynh
                 </label>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setIsSuccess(true);
-                    setAuthStatus(
-                      "Đã gửi hướng dẫn khôi phục mật khẩu tới email đã đăng ký (US-45 AC2)."
-                    );
-                  }}
-                  className="text-xs text-muted hover:text-foreground"
-                >
-                  Quên mật khẩu?
-                </button>
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="phuhuynh@genup.vn"
+                  className="w-full h-10 px-3 rounded-xl bg-surface border border-border-strong text-sm focus:outline-none focus:border-focus focus:ring-2 focus:ring-focus"
+                />
               </div>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="••••••••"
-                className="w-full h-10 px-3 rounded-xl bg-surface border border-border-strong text-sm focus:outline-none focus:border-focus focus:ring-2 focus:ring-focus"
-              />
-            </div>
 
-            {authStatus && (
-              <p
-                className={`text-xs rounded-lg px-3 py-2 border ${
-                  isSuccess
-                    ? "text-success-text bg-success-bg border-success-border"
-                    : "text-error-text bg-error-bg border-error-border"
-                }`}
+              <div className="space-y-1">
+                <div className="flex items-center justify-between">
+                  <label className="text-xs font-medium text-foreground">
+                    Mật khẩu
+                  </label>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsSuccess(true);
+                      setAuthStatus(
+                        "Đã gửi hướng dẫn khôi phục mật khẩu tới email đã đăng ký (US-45 AC2)."
+                      );
+                    }}
+                    className="text-xs text-muted hover:text-foreground"
+                  >
+                    Quên mật khẩu?
+                  </button>
+                </div>
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="••••••••"
+                  className="w-full h-10 px-3 rounded-xl bg-surface border border-border-strong text-sm focus:outline-none focus:border-focus focus:ring-2 focus:ring-focus"
+                />
+              </div>
+
+              {authStatus && (
+                <p
+                  className={`text-xs rounded-lg px-3 py-2 border ${
+                    isSuccess
+                      ? "text-success-text bg-success-bg border-success-border"
+                      : "text-error-text bg-error-bg border-error-border"
+                  }`}
+                >
+                  {authStatus}
+                </p>
+              )}
+
+              <button
+                type="submit"
+                className="w-full h-10 rounded-xl bg-primary hover:bg-primary-hover text-primary-foreground text-sm font-medium"
               >
-                {authStatus}
-              </p>
-            )}
+                Đăng nhập bằng Email
+              </button>
+            </form>
+          </div>
+        )}
 
-            <button
-              type="submit"
-              className="w-full h-10 rounded-xl bg-primary hover:bg-primary-hover text-primary-foreground text-sm font-medium"
+        {firebaseUser && authStatus && (
+          <p
+            className={`text-xs rounded-lg px-3 py-2 border ${
+              isSuccess
+                ? "text-success-text bg-success-bg border-success-border"
+                : "text-error-text bg-error-bg border-error-border"
+            }`}
+          >
+            {authStatus}
+          </p>
+        )}
+
+        {firebaseUser && (
+          <div className="pt-2 border-t border-border flex items-center justify-between text-xs text-muted">
+            <span className="inline-flex items-center gap-1">
+              <ShieldCheck className="w-3.5 h-3.5" />
+              Muốn khởi tạo lại hồ sơ học sinh?
+            </span>
+            <Link
+              href="/onboarding"
+              className="font-medium text-foreground hover:underline"
             >
-              Đăng nhập tài khoản
-            </button>
-          </form>
-        </div>
-
-        <div className="pt-2 border-t border-border flex items-center justify-between text-xs text-muted">
-          <span className="inline-flex items-center gap-1">
-            <ShieldCheck className="w-3.5 h-3.5" />
-            Muốn khởi tạo lại từ đầu?
-          </span>
-          <Link href="/onboarding" className="font-medium text-foreground hover:underline">
-            Tạo hồ sơ học sinh mới
-          </Link>
-        </div>
+              Thiết lập lại hồ sơ
+            </Link>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -1,8 +1,8 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   Award,
   Bell,
@@ -32,6 +32,7 @@ function formatSeconds(sec: number): string {
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const router = useRouter();
   const {
     profile,
     parentSettings,
@@ -41,12 +42,55 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     isTimerRunning,
   } = useGenUp();
 
+  const [authChecked, setAuthChecked] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  const isPublicPage = pathname === "/" || pathname === "/login";
+
+  useEffect(() => {
+    const checkAuth = () => {
+      try {
+        const fbUser = localStorage.getItem("genup_firebase_user");
+        const sbLogged = localStorage.getItem("genup_supabase_logged_in");
+        const authed = Boolean(fbUser || sbLogged);
+        setIsAuthenticated(authed);
+        setAuthChecked(true);
+        if (!authed && !isPublicPage) {
+          router.replace("/login");
+        }
+      } catch {
+        setIsAuthenticated(false);
+        setAuthChecked(true);
+        if (!isPublicPage) {
+          router.replace("/login");
+        }
+      }
+    };
+
+    checkAuth();
+    window.addEventListener("genup-auth-change", checkAuth);
+    return () => window.removeEventListener("genup-auth-change", checkAuth);
+  }, [isPublicPage, pathname, router]);
+
   // Không bọc sidebar cho trang Landing (/) hoặc trang Login/Onboarding
   const isStandalonePage =
     pathname === "/" ||
     pathname === "/login" ||
     pathname === "/onboarding" ||
     pathname === "/choose-avatar";
+
+  if (!isPublicPage && (!authChecked || !isAuthenticated)) {
+    return (
+      <div className="min-h-screen bg-background text-foreground flex items-center justify-center p-4">
+        <div className="text-center space-y-2">
+          <p className="text-sm font-medium">Đang kiểm tra phiên đăng nhập...</p>
+          <p className="text-xs text-muted">
+            Vui lòng đăng nhập bằng Google để truy cập GenUp.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   if (isStandalonePage) {
     return <div className="min-h-screen bg-background text-foreground">{children}</div>;
