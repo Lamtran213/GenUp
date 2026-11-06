@@ -1,25 +1,74 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { Bell, CheckCheck, Smartphone } from "lucide-react";
+import { Bell, CheckCheck, Send, Smartphone, Terminal } from "lucide-react";
 import { useGenUp } from "@/context/GenUpContext";
-import { registerFirebasePushToken } from "@/lib/firebase/client";
+import {
+  registerFirebasePushToken,
+  showBrowserNotification,
+} from "@/lib/firebase/client";
 
 export default function NotificationsPage() {
   const { notifications, markNotificationRead } = useGenUp();
   const [fcmStatus, setFcmStatus] = useState<string | null>(null);
+  const [isError, setIsError] = useState(false);
+  const [currentToken, setCurrentToken] = useState<string | null>(null);
+  const [sendingTest, setSendingTest] = useState(false);
+  const [showMobileSpec, setShowMobileSpec] = useState(false);
 
   const unreadCount = notifications.filter((n) => !n.isRead).length;
 
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem("genup_fcm_device_token");
+      if (saved) setCurrentToken(saved);
+    } catch {
+      // ignore
+    }
+  }, []);
+
   const handleEnableMobilePush = async () => {
-    const token = await registerFirebasePushToken();
-    if (token) {
-      setFcmStatus(
-        `Đã kết nối Firebase Cloud Messaging (Token: ${token.slice(0, 18)}...)`
-      );
+    setFcmStatus("Đang yêu cầu quyền thông báo & đăng ký Service Worker...");
+    setIsError(false);
+
+    const res = await registerFirebasePushToken();
+    if (res.ok && res.token) {
+      setCurrentToken(res.token);
+      setIsError(false);
+      setFcmStatus(res.message);
     } else {
-      setFcmStatus("Trình duyệt hiện tại chưa bật quyền Push Notification.");
+      setIsError(true);
+      setFcmStatus(res.message);
+    }
+  };
+
+  const handleSendTestPush = async () => {
+    setSendingTest(true);
+    const title = "Nhắc nhở chuỗi Streak từ GenUp!";
+    const body =
+      "Chỉ cần 5 phút hoàn thành 1 bài học hoặc 1 tình huống hôm nay để giữ vững chuỗi Streak của bạn nhé!";
+
+    const res = await fetch("/api/notifications", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        type: "streak",
+        title,
+        body,
+        actionUrl: "/lessons",
+        fcmTokens: currentToken ? [currentToken] : [],
+      }),
+    }).catch(() => null);
+
+    await showBrowserNotification(title, body);
+    setSendingTest(false);
+
+    if (res && res.ok) {
+      setIsError(false);
+      setFcmStatus(
+        "Đã bắn thử Push Notification thành công (Hiển thị popup trên máy + lưu vào MongoDB & gửi qua Firebase Admin FCM)!"
+      );
     }
   };
 
@@ -35,14 +84,35 @@ export default function NotificationsPage() {
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <button
             type="button"
             onClick={handleEnableMobilePush}
             className="h-9 px-3.5 rounded-xl border border-border-strong bg-surface hover:bg-button-hover text-xs font-medium inline-flex items-center gap-1.5"
           >
             <Smartphone className="w-3.5 h-3.5" />
-            <span>Kết nối Firebase FCM Mobile</span>
+            <span>
+              {currentToken ? "Đã kết nối FCM (Làm mới)" : "Kết nối Firebase FCM"}
+            </span>
+          </button>
+
+          <button
+            type="button"
+            onClick={handleSendTestPush}
+            disabled={sendingTest}
+            className="h-9 px-3.5 rounded-xl border border-border-strong bg-surface hover:bg-button-hover text-xs font-medium inline-flex items-center gap-1.5 disabled:opacity-50"
+          >
+            <Send className="w-3.5 h-3.5" />
+            <span>{sendingTest ? "Đang gửi..." : "Bắn thử Push Notification"}</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setShowMobileSpec((prev) => !prev)}
+            className="h-9 px-3.5 rounded-xl bg-secondary hover:bg-secondary-hover text-foreground text-xs font-medium inline-flex items-center gap-1.5"
+          >
+            <Terminal className="w-3.5 h-3.5" />
+            <span>API cho Mobile App</span>
           </button>
 
           {unreadCount > 0 && (
@@ -59,8 +129,60 @@ export default function NotificationsPage() {
       </div>
 
       {fcmStatus && (
-        <div className="p-3.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-medium">
+        <div
+          className={`p-3.5 rounded-xl border text-xs font-medium leading-relaxed ${
+            isError
+              ? "bg-error-bg border-error-border text-error-text"
+              : "bg-emerald-50 border-emerald-200 text-emerald-800"
+          }`}
+        >
           {fcmStatus}
+        </div>
+      )}
+
+      {/* Tài liệu tích hợp nhanh cho Mobile App (Android / iOS / React Native / Flutter) */}
+      {showMobileSpec && (
+        <div className="bg-surface border border-border-strong rounded-xl p-5 space-y-3">
+          <div className="flex items-center justify-between">
+            <h2 className="text-sm font-semibold">
+              Cổng API Firebase Cloud Messaging (FCM) cho Mobile App (Android / iOS)
+            </h2>
+            <span className="text-xs text-muted">Project ID: genup-9c6c3</span>
+          </div>
+          <p className="text-xs text-muted leading-relaxed">
+            Backend Next.js trên Vercel đã tích hợp sẵn Firebase Admin SDK (`firebase-admin`)
+            và mở sẵn 2 API để ứng dụng Mobile (React Native / Flutter / Kotlin / Swift) gọi trực tiếp:
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+            <div className="p-3 rounded-xl bg-background border border-border space-y-1.5">
+              <p className="font-semibold text-foreground">
+                1. Đăng ký Token từ máy Mobile: `POST /api/fcm/device`
+              </p>
+              <pre className="text-[11px] text-muted overflow-x-auto whitespace-pre-wrap font-mono">
+{`{
+  "fcmToken": "<token_tu_FirebaseMessaging_mobile>",
+  "platform": "android", // hoặc "ios"
+  "firebaseUid": "<uid_nguoi_dung>",
+  "deviceName": "Samsung S24 / iPhone 15",
+  "sendWelcomePush": true
+}`}
+              </pre>
+            </div>
+            <div className="p-3 rounded-xl bg-background border border-border space-y-1.5">
+              <p className="font-semibold text-foreground">
+                2. Bắn Push Notification xuống Mobile: `POST /api/notifications`
+              </p>
+              <pre className="text-[11px] text-muted overflow-x-auto whitespace-pre-wrap font-mono">
+{`{
+  "type": "streak",
+  "title": "Nhắc học tập GenUp",
+  "body": "Hoàn thành 1 bài học để giữ Streak!",
+  "actionUrl": "/lessons",
+  "fcmTokens": ["<fcmToken_mobile>"]
+}`}
+              </pre>
+            </div>
+          </div>
         </div>
       )}
 
@@ -112,4 +234,3 @@ export default function NotificationsPage() {
     </div>
   );
 }
-

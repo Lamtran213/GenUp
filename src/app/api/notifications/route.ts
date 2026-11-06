@@ -40,8 +40,23 @@ export async function POST(request: NextRequest) {
   };
 
   const db = await getMongoDatabase();
+  const targetTokens = new Set<string>(
+    fcmTokens.filter((t) => typeof t === "string" && !t.startsWith("fcm-browser-local-"))
+  );
+
   if (db) {
     await db.collection<InAppNotification>("in_app_notifications").insertOne(item);
+    // Tự động lấy thêm toàn bộ token thiết bị Mobile (Android / iOS) & Web đã đăng ký trong fcm_devices
+    const savedDevices = await db
+      .collection<{ fcmToken?: string }>("fcm_devices")
+      .find({})
+      .limit(50)
+      .toArray();
+    for (const dev of savedDevices) {
+      if (dev.fcmToken && !dev.fcmToken.startsWith("fcm-browser-local-")) {
+        targetTokens.add(dev.fcmToken);
+      }
+    }
   } else {
     const store = getFallbackStore();
     store.notifications.unshift(item);
@@ -49,7 +64,7 @@ export async function POST(request: NextRequest) {
 
   // Đẩy Push Notification qua Firebase Cloud Messaging (FCM) xuống Mobile/Web
   const fcmResult = await sendMobilePushNotification({
-    tokens: fcmTokens,
+    tokens: Array.from(targetTokens),
     title,
     body: text,
     actionUrl,
