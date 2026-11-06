@@ -93,3 +93,4 @@ export function GoogleSignInButton({ compact = false }: { compact?: boolean }) {
     </button>
   );
 }
+
