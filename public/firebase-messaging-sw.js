@@ -37,3 +37,4 @@ self.addEventListener("notificationclick", (event) => {
     "/notifications";
   event.waitUntil(self.clients.openWindow(targetUrl));
 });
+
