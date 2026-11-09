@@ -29,6 +29,7 @@
     "ios": "expo run:ios",
     "prebuild:android": "expo prebuild --platform android",
     "apk:debug": "powershell -NoProfile -Command \"if (!(Test-Path C:\\gu)) { cmd /c 'mklink /J C:\\gu \\\"' + (Get-Item ..).FullName + '\\\"' }; Set-Location C:\\gu\\mobile\\android; .\\gradlew.bat assembleDebug\"",
+    "apk:release": "powershell -NoProfile -Command \"if (!(Test-Path C:\\gu)) { cmd /c 'mklink /J C:\\gu \\\"' + (Get-Item ..).FullName + '\\\"' }; Set-Location C:\\gu\\mobile\\android; .\\gradlew.bat assembleRelease\"",
     "aab:release": "powershell -NoProfile -Command \"if (!(Test-Path C:\\gu)) { cmd /c 'mklink /J C:\\gu \\\"' + (Get-Item ..).FullName + '\\\"' }; Set-Location C:\\gu\\mobile\\android; .\\gradlew.bat bundleRelease\"",
     "web": "expo start --web"
   },
