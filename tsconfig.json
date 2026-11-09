@@ -23,6 +23,5 @@
     }
   },
   "include": ["next-env.d.ts", "src/**/*.ts", "src/**/*.tsx", ".next/types/**/*.ts"],
-  "exclude": ["node_modules", "functions", "genup_maui"]
+  "exclude": ["node_modules", "functions", "mobile", "genup_maui"]
 }
-

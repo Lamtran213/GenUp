@@ -4,6 +4,12 @@ node_modules/
 out/
 build/
 dist/
+mobile/node_modules/
+mobile/.expo/
+mobile/dist/
+mobile/web-build/
+mobile/android/
+mobile/ios/
 
 # Environment variables & Secrets (NFR-S07)
 .env
@@ -11,6 +17,8 @@ dist/
 !.env.example
 *firebase-adminsdk*.json
 service-account*.json
+mobile/google-services.json
+mobile/GoogleService-Info.plist
 
 # Vercel & Firebase local artifacts / unused init folders
 .vercel/
@@ -29,21 +37,5 @@ next-env.d.ts
 *.pdf
 .DS_Store
 Thumbs.db
-
-# .NET MAUI (genup_maui) Build Artifacts & Mobile Secrets
-**/[Bb]in/
-**/[Oo]bj/
-.vs/
-*.user
-*.suo
-*.userosscache
-*.sln.docstates
 *.keystore
 *.jks
-genup_maui/**/google-services.json
-genup_maui/**/GoogleService-Info.plist
-
-
-
-.vercel
-.env*

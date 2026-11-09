@@ -1,4 +1,5 @@
-# Bỏ qua thư mục Mobile (.NET MAUI) và các thư mục root không cần thiết khi deploy Web lên Vercel
+# Bỏ qua thư mục Mobile (React Native / Expo) và các thư mục root không cần thiết khi deploy Web lên Vercel
+/mobile
 /genup_maui
 /functions
 /dataconnect
